@@ -23,12 +23,12 @@ def keywordFeatureExtractor(x):
             count += 1
             frac = roundToFraction(i, wordCount, 10)
             phi["location"+str(frac)] = 1
-    phi["count"] = count
+    # phi["count"] = count
 
     # length
-    phi["length"+str(len(testWord))] = 1
+    # phi["length"+str(len(testWord))] = 1
     # isCapital
-    phi["isCapital"] = 1 if testWord.isupper() else 0
+    phi["isCapital"] = 1 if testWord[0].isupper() else 0
     # TODO: pos
 
     return phi

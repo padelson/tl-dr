@@ -15,7 +15,7 @@ import json
 def process_data(num_samples=-1):
     f1 = open('raw_data.txt', 'r')
     f2 = open('processed_data.txt', 'w')
-    
+
     raw_count = 0
     entry_count = 0
     while (True):
@@ -106,6 +106,6 @@ def get_oracle_data(num_samples=-1):
     return entries
 
 
-# process_data(1)
+# process_data(10)
 # print get_data(1000)
 # print get_oracle_data(100)
