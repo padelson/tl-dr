@@ -19,6 +19,7 @@ def dumbassPredictor(data):
 			prediction = -1
 		if prediction != d[1]:
 			error +=1
+	print 'numWrong, numDataPoints, error'
 	print error, len(data), error/float(len(data))
 
 
