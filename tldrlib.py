@@ -1,4 +1,5 @@
 #!/usr/bin/python
+import nltk
 
 # for now, here is what makes a word a keyword
 # locations in the text
@@ -26,7 +27,8 @@ def keywordFeatureExtractor(x):
     # phi["count"] = count
 
     # length
-    # phi["length"+str(len(testWord))] = 1
+    length = len(testWord)
+    phi["length < 4"] = 1 if length < 4 else 0
     # isCapital
     phi["isCapital"] = 1 if testWord[0].isupper() else 0
     # TODO: pos

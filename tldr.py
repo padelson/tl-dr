@@ -14,10 +14,10 @@ random.shuffle(data)
 testData = data[:len(data)/10]
 trainingData = data[len(testData)+1:]
 testData = [d for d in data if d[1] == 1]
-print [d[1] for d in testData]
+print [d[0][1] for d in testData]
 # testData = random.sample(data, len(data)/10)
 # trainingData = [d for d in data if d not in testData]
 print 'datasets separated'
-w = learnPredictor(trainingData, testData, keywordFeatureExtractor, 10, 0.01)
+w = learnPredictor(trainingData, testData, keywordFeatureExtractor, 50, 0.001)
 
 print w
