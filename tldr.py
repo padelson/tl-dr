@@ -29,12 +29,9 @@ data = get_data()
 random.shuffle(data)
 testData = data[:len(data)/10]
 trainingData = data[len(testData)+1:]
-testData = [d for d in data if d[1] == 1]
-print 'currently using test data of all keywords'
-# testData = random.sample(data, len(data)/10)
-# trainingData = [d for d in data if d not in testData]
-print 'datasets separated'
-dumbassPredictor(data)
+onesTestData = [d for d in data if d[1] == 1]
+
+dumbassPredictor(onesTestData)
 # w = learnPredictor(trainingData, testData, keywordFeatureExtractor, 10, 0.01)
 
 # print w
