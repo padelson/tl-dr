@@ -7,8 +7,8 @@ from util import *
 from process_data import *
 
 print "learning"
-print getData(100)
 
-trainingData = getData(1)
-w = learnPredictor(trainingData, keywordFeatureExtractor, 1, 0.0001)
+trainingData = get_data(10000)
+w = learnPredictor(trainingData, trainingData, keywordFeatureExtractor, 100, 0.001)
+
 print w

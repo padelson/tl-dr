@@ -28,7 +28,7 @@ def keywordFeatureExtractor(x):
     # length
     phi["length"+str(len(testWord))] = 1
     # isCapital
-    phi["isCapital"] = 1 if testWord.isupper() else 0
+    phi["isCapital"] = 1 if testWord[0].isupper() else 0
     # TODO: pos
 
     return phi

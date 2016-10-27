@@ -26,6 +26,9 @@ def learnPredictor(trainExamples, testExamples, featureExtractor, numIters, eta)
         for x, y in trainExamples:
             if Loss(x, y, weights) != 0:
                 increment(weights, eta * y, featureExtractor(x))
+            print weights
+        print evaluatePredictor(trainExamples, Predictor)
+        print evaluatePredictor(testExamples, Predictor)
 
     # END_YOUR_CODE
     return weights
