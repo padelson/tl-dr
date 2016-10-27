@@ -1,79 +1,111 @@
 import json
 
-def processData(numSamples=-1):
+
+# Can indicate num_samples, to choose how many raw data points
+# to process
+
+# Reads raw_data.txt and outputs a file processed_data.txt,
+# which can later be read to obtain all examples
+
+# Examples are written to processed_data.txt as a map containing:
+#     content: the content of the article
+#     word: the word in question (is it a keyword or nah? that is the question)
+#     title: the title of the article
+#     keyWord: -1 or 1 indicating whether the word is a keyword (1 if yes)
+def process_data(num_samples=-1):
     f1 = open('raw_data.txt', 'r')
     f2 = open('processed_data.txt', 'w')
-    data = f1.read().split('\n')
-    f1.close()
-
-    rawCount = 0
-    entryCount = 0
-    for line in data:
-        if line == '' or (rawCount == numSamples and numSamples is not -1):
+    
+    raw_count = 0
+    entry_count = 0
+    while (True):
+        line = f1.readline()
+        if line == '' or (raw_count == num_samples and num_samples is not -1):
             break
 
-        lineObj = json.loads(line)
-        title = lineObj['title']
-        content = lineObj['content']
-        rawCount += 1
-        print 'processing raw entry ' + str(rawCount)
+        line_obj = json.loads(line)
+        title = line_obj['title']
+        content = line_obj['content']
+        raw_count += 1
+        print 'processing raw entry ' + str(raw_count)
+
+        #every word in the title is assumed to be a keyword
         for word in title.split():
-            entry = {'content': content, 'word': word, 'title': title, 'keyWord': 1}
+            entry = {'content': content, 'word': word,
+                     'title': title, 'keyWord': 1}
             f2.write(str(json.dumps(entry)) + '\n')
-            entryCount += 1
-            if entryCount % 100 == 0:
-                print 'entry ' + str(entryCount) + ' added'
+            entry_count += 1
+            if entry_count % 100 == 0:
+                print 'entry ' + str(entry_count) + ' added'
 
-        nonKeywords = [w for w in content.split() if w not in title.split()]
+        #every word not in the title is assumed to not be a keyword
+        non_keywords = [w for w in content.split() if w not in title.split()]
 
-        for word in set(nonKeywords):
-            entry = {'content': content, 'word': word, 'title': title, 'keyWord': -1}
+        for word in set(non_keywords):
+            entry = {'content': content, 'word': word,
+                     'title': title, 'keyWord': -1}
             f2.write(str(json.dumps(entry)) + '\n')
-            entryCount += 1
-            if entryCount % 100 == 0:
-                print 'entry ' + str(entryCount) + ' added'
+            entry_count += 1
+            if entry_count % 100 == 0:
+                print 'entry ' + str(entry_count) + ' added'
 
+    f1.close()
     f2.close()
 
-def getData(numSamples=-1):
+
+# Can indicate num_samples, to choose how many raw data points
+# to process
+
+# Reads processed_data.txt to obtain all examples and returns an array
+# of example points, where each point is of the form: (article, word) , isKeyWord
+def get_data(num_samples=-1):
     f = open('processed_data.txt', 'r')
-    data = f.read().split('\n')
     entries = []
     count = 0
-    for line in data:
-        if line == '' or (count == numSamples and numSamples is not -1):
+    while (True):
+        line = f.readline()
+        if line == '' or (count == num_samples and num_samples is not -1):
             break
 
         count += 1
         if count % 100 == 0:
             print 'processing line ' + str(count)
-        lineObj = json.loads(line)
-        #entry is of the form: (article, word) , isKeyWord
-        entry = ((lineObj['content'], lineObj['word']), lineObj['keyWord'])
+        line_obj = json.loads(line)
+
+        # entry is of the form: (article, word) , isKeyWord
+        entry = ((line_obj['content'], line_obj['word']), line_obj['keyWord'])
         entries.append(entry)
     f.close()
     return entries
 
-def getOracleData(numSamples=-1):
+
+# Can indicate num_samples, to choose how many raw data points
+# to process
+
+# Reads processed_data.txt to obtain all examples and returns an array
+# of example points, where each point is of the form: (article, title, word) , isKeyWord
+def get_oracle_data(num_samples=-1):
     f = open('processed_data.txt', 'r')
-    data = f.read().split('\n')
     entries = []
     count = 0
-    for line in data:
-        if line == '' or (count == numSamples and numSamples is not -1):
+    while (True):
+        line = f.readline()
+        if line == '' or (count == num_samples and num_samples is not -1):
             break
 
         count += 1
         if count % 100 == 0:
             print 'processing line ' + str(count)
-        lineObj = json.loads(line)
-        #entry is of the form: (article, word) , isKeyWord
-        entry = ((lineObj['content'], lineObj['title'], lineObj['word']), lineObj['keyWord'])
+        line_obj = json.loads(line)
+
+        # entry is of the form: (article, word) , isKeyWord
+        entry = ((line_obj['content'], line_obj['title'],
+                  line_obj['word']), line_obj['keyWord'])
         entries.append(entry)
     f.close()
     return entries
 
 
-# processData()
-# print getData(1)
-# print getOracleData(1)
+# process_data(100)
+# print get_data(100)
+# print get_oracle_data(100)
