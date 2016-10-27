@@ -33,6 +33,9 @@ def keywordFeatureExtractor(x):
     phi["isCapital"] = 1 if testWord[0].isupper() else 0
     # TODO: pos
 
+    tag = nltk.pos_tag([testWord])
+    # phi["Tag is " + tag[0][1]] = 1
+
     return phi
 
 

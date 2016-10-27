@@ -28,8 +28,8 @@ def learnPredictor(trainExamples, testExamples, featureExtractor, numIters, eta)
                 increment(weights, eta * y, featureExtractor(x))
             # print weights
             # print Predictor(x), y
-        print evaluatePredictor(trainExamples, Predictor)
-        print evaluatePredictor(testExamples, Predictor)
+        print 'Training Error: ' + str(evaluatePredictor(trainExamples, Predictor))
+        print 'Test Error: ' + str(evaluatePredictor(testExamples, Predictor))
         print ''
 
     # END_YOUR_CODE

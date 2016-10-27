@@ -1,6 +1,8 @@
 # tl-dr
 Stanford University CS221 Project: generating summaries for bodies of text
 
+Run tldr.py
+
 ## Approach
 The general problem we are trying to solve is **article => headline**.
 
