@@ -16,7 +16,7 @@ def processData():
         title = lineObj['title']
         content = lineObj['content']
         rawCount += 1
-        print 'processing raw entry ' + str(rawCount)
+        #print 'processing raw entry ' + str(rawCount)
         for word in title.split():
             entry = {'content': content, 'word': word, 'title': title, 'keyWord': 1}
             f2.write(str(json.dumps(entry)) + '\n')
@@ -26,7 +26,7 @@ def processData():
 
         nonKeywords = [w for w in content.split() if w not in title.split()]
 
-        for word in nonKeywords:
+        for word in set(nonKeywords):
             entry = {'content': content, 'word': word, 'title': title, 'keyWord': 0}
             f2.write(str(json.dumps(entry)) + '\n')
             entryCount += 1
@@ -53,5 +53,6 @@ def getData():
         entries.append(entry)
     f.close()
     return entries
-# processData()
+
+processData()
 entries = getData()
