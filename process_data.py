@@ -1,6 +1,6 @@
 import json
 
-def processData():
+def processData(numSamples=-1):
     f1 = open('raw_data.txt', 'r')
     f2 = open('processed_data.txt', 'w')
     data = f1.read().split('\n')
@@ -9,14 +9,14 @@ def processData():
     rawCount = 0
     entryCount = 0
     for line in data:
-        if line == '':
+        if line == '' or (rawCount == numSamples and numSamples is not -1):
             break
 
         lineObj = json.loads(line)
         title = lineObj['title']
         content = lineObj['content']
         rawCount += 1
-        #print 'processing raw entry ' + str(rawCount)
+        print 'processing raw entry ' + str(rawCount)
         for word in title.split():
             entry = {'content': content, 'word': word, 'title': title, 'keyWord': 1}
             f2.write(str(json.dumps(entry)) + '\n')
@@ -35,13 +35,13 @@ def processData():
 
     f2.close()
 
-def getData():
+def getData(numSamples=-1):
     f = open('processed_data.txt', 'r')
     data = f.read().split('\n')
     entries = []
     count = 0
     for line in data:
-        if line == '':
+        if line == '' or (count == numSamples and numSamples is not -1):
             break
 
         count += 1
@@ -54,13 +54,13 @@ def getData():
     f.close()
     return entries
 
-def getOracleData():
+def getOracleData(numSamples=-1):
     f = open('processed_data.txt', 'r')
     data = f.read().split('\n')
     entries = []
     count = 0
     for line in data:
-        if line == '':
+        if line == '' or (count == numSamples and numSamples is not -1):
             break
 
         count += 1
@@ -74,6 +74,6 @@ def getOracleData():
     return entries
 
 
-# processData()
-# getData()
-# getOracleData()
+processData(1000)
+# print getData(1)
+# print getOracleData(1)
