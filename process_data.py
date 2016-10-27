@@ -27,7 +27,7 @@ def processData(numSamples=-1):
         nonKeywords = [w for w in content.split() if w not in title.split()]
 
         for word in set(nonKeywords):
-            entry = {'content': content, 'word': word, 'title': title, 'keyWord': 0}
+            entry = {'content': content, 'word': word, 'title': title, 'keyWord': -1}
             f2.write(str(json.dumps(entry)) + '\n')
             entryCount += 1
             if entryCount % 100 == 0:
@@ -74,6 +74,6 @@ def getOracleData(numSamples=-1):
     return entries
 
 
-processData(1000)
+# processData()
 # print getData(1)
 # print getOracleData(1)
