@@ -54,5 +54,26 @@ def getData():
     f.close()
     return entries
 
-processData()
-entries = getData()
+def getOracleData():
+    f = open('processed_data.txt', 'r')
+    data = f.read().split('\n')
+    entries = []
+    count = 0
+    for line in data:
+        if line == '':
+            break
+
+        count += 1
+        if count % 100 == 0:
+            print 'processing line ' + str(count)
+        lineObj = json.loads(line)
+        #entry is of the form: (article, word) , isKeyWord
+        entry = ((lineObj['content'], lineObj['title'], lineObj['word']), lineObj['keyWord'])
+        entries.append(entry)
+    f.close()
+    return entries
+
+
+# processData()
+# getData()
+# getOracleData()
