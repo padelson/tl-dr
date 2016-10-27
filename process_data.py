@@ -19,7 +19,7 @@ def processData():
         print 'processing raw entry ' + str(rawCount)
         for word in title.split():
             entry = {'content': content, 'word': word}
-            f2.write(str(entry) + '\n')
+            f2.write(str(json.dumps(entry)) + '\n')
             entryCount += 1
             print 'entry ' + str(entryCount) + ' added'
 
@@ -29,12 +29,18 @@ def getData():
     f = open('processed_data.txt', 'r')
     data = f.read().split('\n')
     entries = []
+    count = 0
     for line in data:
-        print line
+        if line == '':
+            break
+
+        count += 1
+        print 'processing line ' + str(count)
         lineObj = json.loads(line)
-    #goal is to read each entry, which is a json object / dict
-    #turn values into tuple, add to entries[], and return
+        #entry is of the form: (article, word) , isKeyWord
+        entry = ((lineObj['content'], lineObj['word']), 1)
+        entries.append(entry)
     f.close()
     return entries
 processData()
-getData()
+entries = getData()
