@@ -18,10 +18,20 @@ def processData():
         rawCount += 1
         print 'processing raw entry ' + str(rawCount)
         for word in title.split():
-            entry = {'content': content, 'word': word}
+            entry = {'content': content, 'word': word, 'title': title, 'keyWord': 1}
             f2.write(str(json.dumps(entry)) + '\n')
             entryCount += 1
-            print 'entry ' + str(entryCount) + ' added'
+            if entryCount % 100 == 0:
+                print 'entry ' + str(entryCount) + ' added'
+
+        nonKeywords = [w for w in content.split() if w not in title.split()]
+
+        for word in nonKeywords:
+            entry = {'content': content, 'word': word, 'title': title, 'keyWord': 0}
+            f2.write(str(json.dumps(entry)) + '\n')
+            entryCount += 1
+            if entryCount % 100 == 0:
+                print 'entry ' + str(entryCount) + ' added'
 
     f2.close()
 
@@ -35,12 +45,13 @@ def getData():
             break
 
         count += 1
-        print 'processing line ' + str(count)
+        if count % 100 == 0:
+            print 'processing line ' + str(count)
         lineObj = json.loads(line)
         #entry is of the form: (article, word) , isKeyWord
-        entry = ((lineObj['content'], lineObj['word']), 1)
+        entry = ((lineObj['content'], lineObj['word']), lineObj['keyWord'])
         entries.append(entry)
     f.close()
     return entries
-processData()
+# processData()
 entries = getData()
