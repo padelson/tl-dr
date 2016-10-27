@@ -22,9 +22,11 @@ def keywordFeatureExtractor(x):
     for i, word in enumerate(article.split()):
         if word == testWord:
             count += 1
-            frac = roundToFraction(i, wordCount, 10)
+            frac = roundToFraction(i, wordCount, 3)
             phi["location"+str(frac)] = 1
     # phi["count"] = count
+
+    phi["word is in first 100"] = 1 if testWord in article.split()[:100] else 0
 
     # length
     length = len(testWord)
