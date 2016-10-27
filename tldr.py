@@ -8,7 +8,7 @@ from process_data import *
 
 print "learning"
 
-def loadTraining
+# def loadTraining
 
 def processData(numSamples=-1):
     f1 = open('raw_data.txt', 'r')
@@ -18,4 +18,4 @@ def processData(numSamples=-1):
 
     rawCount = 0
     entryCount = 0
-    for line in data:
+    # for line in data:
