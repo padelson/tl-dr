@@ -25,7 +25,7 @@ def dumbassPredictor(data):
 def getScore(word, featureExtractor, weights):
 	return dotProduct(weights, featureExtractor(word))
 
-def extractKeywords(dataKeys, data, w):
+def generateSummary(dataKeys, data, w):
 	for dk in dataKeys:
 		candidates = collections.defaultdict(list)
 		for entry in data[dk]:
@@ -54,4 +54,4 @@ for k in testDataKeys:
 w = learnPredictor(trainingData, testData, keywordFeatureExtractor, 1, 0.01)
 print w
 
-extractKeywords(trainingDataKeys, data, w)
+generateSummary(trainingDataKeys, data, w)
