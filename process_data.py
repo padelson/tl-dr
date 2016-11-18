@@ -1,5 +1,11 @@
 import json
+import nltk
 
+def get_words_to_learn(body):
+    desired_tags = ['NOUN', 'ADJ', 'VERB']
+    tagged = nltk.pos_tag(body, tagset='universal')
+    #TODO: instead of returning the word itself(t[0]), stem it
+    return [t[0] for t in tagged if t[1] in desired_tags]
 
 # Can indicate num_samples, to choose how many raw data points
 # to process
@@ -30,7 +36,7 @@ def process_data(num_samples=-1):
         print 'processing raw entry ' + str(raw_count)
 
         #every word in the title is assumed to be a keyword
-        for word in title.split():
+        for word in get_words_to_learn(title.split()):
             entry = {'content': content, 'word': word,
                      'title': title, 'keyWord': 1}
             f2.write(str(json.dumps(entry)) + '\n')
@@ -41,7 +47,7 @@ def process_data(num_samples=-1):
         #every word not in the title is assumed to not be a keyword
         non_keywords = [w for w in content.split() if w not in title.split()]
 
-        for word in set(non_keywords):
+        for word in get_words_to_learn(set(non_keywords)):
             entry = {'content': content, 'word': word,
                      'title': title, 'keyWord': -1}
             f2.write(str(json.dumps(entry)) + '\n')
@@ -106,6 +112,6 @@ def get_oracle_data(num_samples=-1):
     return entries
 
 
-process_data(100)
+# process_data(100)
 # print get_data(1000)
 # print get_oracle_data(100)

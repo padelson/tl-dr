@@ -31,8 +31,7 @@ testData = data[:len(data)/10]
 trainingData = data[len(testData)+1:]
 onesTestData = [d for d in data if d[1] == 1]
 
-dumbassPredictor(onesTestData)
-# w = learnPredictor(trainingData, testData, keywordFeatureExtractor, 10, 0.01)
+# dumbassPredictor(onesTestData)
+w = learnPredictor(trainingData, onesTestData, keywordFeatureExtractor, 10, 0.01)
 
-# print w
-
+print w
