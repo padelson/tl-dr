@@ -1,11 +1,13 @@
+import collections
 import json
 import nltk
 
 def get_words_to_learn(body):
     desired_tags = ['NOUN', 'ADJ', 'VERB']
     tagged = nltk.pos_tag(body, tagset='universal')
+    #TODO: remove punctuations
     #TODO: instead of returning the word itself(t[0]), stem it
-    return [t[0] for t in tagged if t[1] in desired_tags]
+    return [t for t in tagged if t[1] in desired_tags]
 
 # Can indicate num_samples, to choose how many raw data points
 # to process
@@ -36,9 +38,10 @@ def process_data(num_samples=-1):
         print 'processing raw entry ' + str(raw_count)
 
         #every word in the title is assumed to be a keyword
-        for word in get_words_to_learn(title.split()):
+        for word_pos in get_words_to_learn(title.split()):
+            word, pos = word_pos
             entry = {'content': content, 'word': word,
-                     'title': title, 'keyWord': 1}
+                     'title': title, 'keyWord': 1, 'pos': pos}
             f2.write(str(json.dumps(entry)) + '\n')
             entry_count += 1
             if entry_count % 100 == 0:
@@ -47,9 +50,10 @@ def process_data(num_samples=-1):
         #every word not in the title is assumed to not be a keyword
         non_keywords = [w for w in content.split() if w not in title.split()]
 
-        for word in get_words_to_learn(set(non_keywords)):
+        for word_pos in get_words_to_learn(set(non_keywords)):
+            word, pos = word_pos
             entry = {'content': content, 'word': word,
-                     'title': title, 'keyWord': -1}
+                     'title': title, 'keyWord': -1, 'pos': pos}
             f2.write(str(json.dumps(entry)) + '\n')
             entry_count += 1
             if entry_count % 100 == 0:
@@ -66,7 +70,7 @@ def process_data(num_samples=-1):
 # of example points, where each point is of the form: (article, word) , isKeyWord
 def get_data(num_samples=-1):
     f = open('processed_data.txt', 'r')
-    entries = []
+    entries = collections.defaultdict(list)
     count = 0
     while (True):
         line = f.readline()
@@ -79,8 +83,8 @@ def get_data(num_samples=-1):
         line_obj = json.loads(line)
 
         # entry is of the form: (article, word) , isKeyWord
-        entry = ((line_obj['content'], line_obj['word']), line_obj['keyWord'])
-        entries.append(entry)
+        entry = ((line_obj['content'], line_obj['word'], line_obj['pos']), line_obj['keyWord'])
+        entries[line_obj['title']].append(entry)
     f.close()
     return entries
 
