@@ -106,6 +106,6 @@ def get_oracle_data(num_samples=-1):
     return entries
 
 
-process_data(20)
+process_data(100)
 # print get_data(1000)
 # print get_oracle_data(100)
