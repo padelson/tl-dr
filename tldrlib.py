@@ -1,5 +1,9 @@
 #!/usr/bin/python
 import nltk
+import util
+
+def getScore(entry, featureExtractor, weights):
+	return util.dotProduct(weights, featureExtractor(entry))
 
 # for now, here is what makes a word a keyword
 # locations in the text

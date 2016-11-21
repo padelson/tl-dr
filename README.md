@@ -3,6 +3,16 @@ Stanford University CS221 Project: generating summaries for bodies of text
 
 Run tldr.py
 
+# TODOS:
+-   figure out how to process data efficiently so we can run this on a big data set
+-   try different classifiers
+-   try different loss functions
+-   switch from util.py to sklearn?  so that we can host this code publicly
+-   figure out how to rate generated summaries
+-   implement remaining features
+-   do better on summary generation
+-   add command line functionality to tldr.py, key_ex.py, and sum_gen.py  
+
 ## Approach
 The general problem we are trying to solve is **article => headline**.
 

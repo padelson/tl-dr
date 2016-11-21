@@ -9,16 +9,21 @@ def get_words_to_learn(body):
     #TODO: instead of returning the word itself(t[0]), stem it
     return [t for t in tagged if t[1] in desired_tags]
 
-# Can indicate num_samples, to choose how many raw data points
-# to process
+def get_data_entries(text):
+    # (article, word, part of speech)
+    words = get_words_to_learn(text.split())
+    entries = []
+    for word_pos in words:
+        word, pos = word_pos
+        entries.append((text, word, pos))
+    return entries
 
-# Reads raw_data.txt and outputs a file processed_data.txt,
-# which can later be read to obtain all examples
 
 # Examples are written to processed_data.txt as a map containing:
 #     content: the content of the article
 #     word: the word in question (is it a keyword or nah? that is the question)
 #     title: the title of the article
+#     pos: part of speech of word
 #     keyWord: -1 or 1 indicating whether the word is a keyword (1 if yes)
 def process_data(num_samples=-1):
     f1 = open('raw_data.txt', 'r')
@@ -63,11 +68,9 @@ def process_data(num_samples=-1):
     f2.close()
 
 
-# Can indicate num_samples, to choose how many raw data points
-# to process
 
 # Reads processed_data.txt to obtain all examples and returns an array
-# of example points, where each point is of the form: (article, word) , isKeyWord
+# of example points, where each point is of the form: (article, word, part of speech) , isKeyWord
 def get_data(num_samples=-1):
     f = open('processed_data.txt', 'r')
     entries = collections.defaultdict(list)
@@ -82,7 +85,7 @@ def get_data(num_samples=-1):
             print 'processing line ' + str(count)
         line_obj = json.loads(line)
 
-        # entry is of the form: (article, word) , isKeyWord
+        # entry is of the form: (article, word, part of speech) , isKeyWord
         entry = ((line_obj['content'], line_obj['word'], line_obj['pos']), line_obj['keyWord'])
         entries[line_obj['title']].append(entry)
     f.close()
@@ -116,6 +119,6 @@ def get_oracle_data(num_samples=-1):
     return entries
 
 
-# process_data(100)
+process_data(500)
 # print get_data(1000)
 # print get_oracle_data(100)
