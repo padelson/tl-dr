@@ -51,7 +51,7 @@ for k in testDataKeys:
 	testData += data[k]
 
 # dumbassPredictor(onesTestData)
-w = learnPredictor(trainingData, testData, keywordFeatureExtractor, 1, 0.01)
+w = learnPredictor(trainingData, testData, keywordFeatureExtractor, 10, 0.01)
 print w
 
 generateSummary(trainingDataKeys, data, w)

@@ -6,10 +6,10 @@ Run tldr.py
 ## Approach
 The general problem we are trying to solve is **article => headline**.
 
-We simplify this first to **article => keywords**.  We can construct a headline from 
+We simplify this first to **article => keywords**.  We can construct a headline from
 significant words using NLP techniques.
 
-We can break down the problem even further to **(article, word) => [-1,1]** indicating
+We can break down the problem even further to **(article, word) => [-1,1\]** indicating
 whether word is a keyword in article.
 
 We have chosen to run linear classification on the simplest form of the problem.
