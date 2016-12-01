@@ -1,38 +1,30 @@
-#!/usr/bin/python
-import tldrlib
-import util
-import process_data
 import random
-from tldrlib import *
-from util import *
+import tldrlib
 from process_data import *
+from key_ex import *
+from sum_gen import *
 
-
-def dumbassPredictor(data):
-	error = 0
-	for d in data:
-		firstSentence = d[0][0].split('.')[0]
-		prediction = None
-		if d[0][1] in firstSentence:
-			prediction = 1
-		else:
-			prediction = -1
-		if prediction != d[1]:
-			error +=1
-	print '\n\nnumWrong, numDataPoints, error'
-	print error, len(data), error/float(len(data))
-
-
-print "learning"
+#TODO: read input args
 
 data = get_data()
-random.shuffle(data)
-testData = data[:len(data)/10]
-trainingData = data[len(testData)+1:]
-onesTestData = [d for d in data if d[1] == 1]
 
-dumbassPredictor(onesTestData)
-# w = learnPredictor(trainingData, testData, keywordFeatureExtractor, 10, 0.01)
+#split data into training and test data sets
+keys = data.keys()
+random.shuffle(keys)
+testDataKeys = keys[:len(keys)/10]
+trainingDataKeys = keys[len(testDataKeys)+1:]
+trainingData = []
+testData = []
+for k in trainingDataKeys:
+	trainingData += data[k]
+for k in testDataKeys:
+	testData += data[k]
 
-# print w
+w = learn_key_extractor(trainingData, testData, tldrlib.keywordFeatureExtractor, 10, 0.01)
+print w
 
+for k in testDataKeys:
+    text = data[k][0][0][0]
+    print k
+    print generate_summary(text)
+    print
