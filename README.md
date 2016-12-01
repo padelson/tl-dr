@@ -10,7 +10,8 @@ Run tldr.py
 -   switch from util.py to sklearn?  so that we can host this code publicly
 -   figure out how to rate generated summaries
 -   implement remaining features
--   do better on summary generation
+-   do better on summary generation.  the plan now is to turn it into a search problem.
+-   EVALUATE GENERATED SUMMARIES SOMEHOW.
 -   add command line functionality to tldr.py, key_ex.py, and sum_gen.py  
 
 ## Approach
