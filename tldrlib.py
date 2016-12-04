@@ -1,4 +1,9 @@
 #!/usr/bin/python
+import nltk
+import util
+
+def getScore(entry, featureExtractor, weights, wordCounts):
+	return util.dotProduct(weights, featureExtractor(entry, wordCounts))
 
 # for now, here is what makes a word a keyword
 # locations in the text
@@ -10,10 +15,11 @@ def roundToFraction(num, denom, frac):
     sector = float(denom) / frac
     return int(num / sector)
 
-def keywordFeatureExtractor(x):
+def keywordFeatureExtractor(x, wordCounts):
     phi = {}
     article = x[0]
     testWord = x[1]
+    pos = x[2]
 
     # location, count
     count = 0
@@ -21,15 +27,23 @@ def keywordFeatureExtractor(x):
     for i, word in enumerate(article.split()):
         if word == testWord:
             count += 1
-            frac = roundToFraction(i, wordCount, 10)
+            frac = roundToFraction(i, wordCount, 3)
             phi["location"+str(frac)] = 1
-    phi["count"] = count
+    phi["count / 10 = " + str(count / 10)] = 1
+
+    phi["word is in first 100"] = 1 if testWord in article.split()[:100] else 0
 
     # length
-    phi["length"+str(len(testWord))] = 1
+    length = len(testWord)
+    # phi["length < 4"] = 1 if length < 4 else 0
+    phi["length / 5 = " + str(length / 5)] = 1
     # isCapital
     phi["isCapital"] = 1 if testWord[0].isupper() else 0
-    # TODO: pos
+
+    phi["pos: " + pos] = 1
+
+    if wordCounts[testWord] > 0:
+        phi['tf-idf'] = float(count) / wordCounts[testWord]
 
     return phi
 

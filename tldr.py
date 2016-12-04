@@ -1,15 +1,31 @@
-#!/usr/bin/python
+import random
 import tldrlib
-import util
-import process_data
-from tldrlib import *
-from util import *
 from process_data import *
+from key_ex import *
+from sum_gen import *
 
-print "learning"
+#TODO: read input args
 
-process_data(1000)
-data = get_data(10000)
-w = learnPredictor(trainingData, trainingData, keywordFeatureExtractor, 100, 0.001)
 
+data, wordCounts = get_data()
+
+#split data into training and test data sets
+keys = data.keys()
+random.shuffle(keys)
+testDataKeys = keys[:len(keys)/10]
+trainingDataKeys = keys[len(testDataKeys)+1:]
+trainingData = []
+testData = []
+for k in trainingDataKeys:
+	trainingData += data[k]
+for k in testDataKeys:
+	testData += data[k]
+# wordCounts = getWordCounts(data)
+w = learn_key_extractor(trainingData, testData, tldrlib.keywordFeatureExtractor, 5, 0.01, wordCounts)
 print w
+
+for k in testDataKeys:
+    text = data[k][0][0][0]
+    print k
+    print generate_summary(text, wordCounts)
+    print
