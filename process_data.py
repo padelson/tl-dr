@@ -74,7 +74,15 @@ def process_data(num_samples=-1):
     f1.close()
     f2.close()
 
-
+def getWikiCounts():
+    f = open('wikipedia_tf.txt', 'r')
+    counts = collections.defaultdict(int)
+    while (True):
+        line = f.readline().split()
+        if not line:
+            break
+        counts[line[0]] = int(line[1])
+    return counts
 
 # Reads processed_data.txt to obtain all examples and returns an array
 # of example points, where each point is of the form: (article, word, part of speech) , isKeyWord
@@ -83,6 +91,7 @@ def get_data(num_samples=-1):
     entries = collections.defaultdict(list)
     wordCounts = collections.defaultdict(float)
     count = 0
+    numKeyWordEntries = 0
     while (True):
         line = f.readline()
         if line == '' or (count == num_samples and num_samples is not -1):
@@ -96,8 +105,15 @@ def get_data(num_samples=-1):
         # entry is of the form: (article, word, part of speech) , isKeyWord
         entry = ((line_obj['content'], line_obj['word'], line_obj['pos']), line_obj['keyWord'])
         entries[line_obj['title']].append(entry)
+
+        if line_obj['keyWord'] == 1:
+            numKeyWordEntries += 1
     f.close()
-    return entries, wordCounts
+    print "number of data entries: " + str(count)
+    print "number of positive entries: " + str(numKeyWordEntries)
+
+
+    return entries, wordCounts, getWikiCounts()
 
 
 # Can indicate num_samples, to choose how many raw data points

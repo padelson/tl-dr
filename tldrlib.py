@@ -2,8 +2,8 @@
 import nltk
 import util
 
-def getScore(entry, featureExtractor, weights, wordCounts):
-	return util.dotProduct(weights, featureExtractor(entry, wordCounts))
+def getScore(entry, featureExtractor, weights, wordCounts, wikiCounts):
+	return util.dotProduct(weights, featureExtractor(entry, wordCounts, wikiCounts))
 
 # for now, here is what makes a word a keyword
 # locations in the text
@@ -15,7 +15,7 @@ def roundToFraction(num, denom, frac):
     sector = float(denom) / frac
     return int(num / sector)
 
-def keywordFeatureExtractor(x, wordCounts):
+def keywordFeatureExtractor(x, wordCounts, wikiCounts):
     phi = {}
     article = x[0]
     testWord = x[1]
@@ -29,14 +29,16 @@ def keywordFeatureExtractor(x, wordCounts):
             count += 1
             frac = roundToFraction(i, wordCount, 3)
             phi["location"+str(frac)] = 1
-    phi["count / 10 = " + str(count / 10)] = 1
+    phi["term freq / 10 = " + str(count / 10)] = 1
+
+    phi["term length / 100 = " + str(wordCount / 100)] = 1
 
     phi["word is in first 100"] = 1 if testWord in article.split()[:100] else 0
 
     # length
     length = len(testWord)
     # phi["length < 4"] = 1 if length < 4 else 0
-    phi["length / 5 = " + str(length / 5)] = 1
+    phi["word length / 5 = " + str(length / 5)] = 1
     # isCapital
     phi["isCapital"] = 1 if testWord[0].isupper() else 0
 
@@ -44,6 +46,9 @@ def keywordFeatureExtractor(x, wordCounts):
 
     if wordCounts[testWord] > 0:
         phi['tf-idf'] = float(count) / wordCounts[testWord]
+
+    if wikiCounts[testWord] > 0:
+        phi["wiki count / 1000: " + str(wikiCounts[testWord] / 1000)] = 1
 
     return phi
 

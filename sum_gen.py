@@ -1,8 +1,8 @@
 from key_ex import *
 
-def generate_summary(text, wordCounts):
-    candidates = extract_keys(text, wordCounts)
+def generate_summary(text, wordCounts, wikiCounts):
+    candidates = extract_keys(text, wordCounts, wikiCounts)
     result = ''
     for ck in candidates.keys():
-        result += ck + ' ' +  max(candidates[ck])[1] + '  '
+        result += ck + ' ' +  str(max(candidates[ck])) + '  '
     return result

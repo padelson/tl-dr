@@ -15,6 +15,7 @@ SEE output.txt FOR RESULTS OF MOST RECENT UPDATE
 -   do better on summary generation.  the plan now is to turn it into a search problem.
 -   EVALUATE GENERATED SUMMARIES SOMEHOW.
 -   add command line functionality to tldr.py, key_ex.py, and sum_gen.py  
+-   try to split up weight vectors?  like train a separate weight vector for each pos
 
 ## Approach
 The general problem we are trying to solve is **article => headline**.
