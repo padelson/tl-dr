@@ -29,7 +29,8 @@ def keywordFeatureExtractor(x, wordCounts, wikiCounts):
             count += 1
             frac = roundToFraction(i, wordCount, 3)
             phi["location"+str(frac)] = 1
-    phi["term freq / 10 = " + str(count / 10)] = 1
+    # phi["term freq / 10 = " + str(count / 10)] = 1
+    phi['term freq'] = count / 10
 
     phi["term length / 100 = " + str(wordCount / 100)] = 1
 
@@ -38,7 +39,7 @@ def keywordFeatureExtractor(x, wordCounts, wikiCounts):
     # length
     length = len(testWord)
     # phi["length < 4"] = 1 if length < 4 else 0
-    phi["word length / 5 = " + str(length / 5)] = 1
+    phi["word length / 5 = " + str(length / 3)] = 1
     # isCapital
     phi["isCapital"] = 1 if testWord[0].isupper() else 0
 
@@ -48,7 +49,8 @@ def keywordFeatureExtractor(x, wordCounts, wikiCounts):
         phi['tf-idf'] = float(count) / wordCounts[testWord]
 
     if wikiCounts[testWord] > 0:
-        phi["wiki count / 1000: " + str(wikiCounts[testWord] / 1000)] = 1
+        # phi["wiki count / 1000: " + str(wikiCounts[testWord] / 1000)] = 1
+        phi["wiki count"] = wikiCounts[testWord] / 1000
 
     return phi
 
