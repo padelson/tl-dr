@@ -35,10 +35,6 @@ def getWordCounts(data):
 def process_data(num_samples=-1):
     f1 = open('raw_data.txt', 'r')
     f2 = open('processed_data.txt', 'w')
-    f3 = open('english.stop', 'r')
-    stop = []
-    for word in f3:
-        stop.append(word)
 
     raw_count = 0
     entry_count = 0
