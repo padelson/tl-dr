@@ -18,6 +18,13 @@ def get_data_entries(text):
         entries.append((text, word, pos))
     return entries
 
+def getWordCounts(data):
+    wordCounts = collections.defaultdict(int)
+    for k in data:
+        entry = data[k][0]
+        for w in entry[0][0].split():
+            wordCounts[w] += 1
+    return wordCounts
 
 # Examples are written to processed_data.txt as a map containing:
 #     content: the content of the article
@@ -74,6 +81,7 @@ def process_data(num_samples=-1):
 def get_data(num_samples=-1):
     f = open('processed_data.txt', 'r')
     entries = collections.defaultdict(list)
+    wordCounts = collections.defaultdict(float)
     count = 0
     while (True):
         line = f.readline()
@@ -84,12 +92,12 @@ def get_data(num_samples=-1):
         if count % 100 == 0:
             print 'processing line ' + str(count)
         line_obj = json.loads(line)
-
+        wordCounts[line_obj['word']] += 1
         # entry is of the form: (article, word, part of speech) , isKeyWord
         entry = ((line_obj['content'], line_obj['word'], line_obj['pos']), line_obj['keyWord'])
         entries[line_obj['title']].append(entry)
     f.close()
-    return entries
+    return entries, wordCounts
 
 
 # Can indicate num_samples, to choose how many raw data points
@@ -119,6 +127,6 @@ def get_oracle_data(num_samples=-1):
     return entries
 
 
-process_data(500)
+# process_data(500)
 # print get_data(1000)
 # print get_oracle_data(100)

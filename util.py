@@ -8,7 +8,7 @@ from collections import Counter
 ##################################################################################################
 ### stochastic gradient descent
 ### classify if a word is relevant or not
-def learnPredictor(trainExamples, testExamples, featureExtractor, numIters, eta):
+def learnPredictor(trainExamples, testExamples, featureExtractor, numIters, eta, wordCounts):
     '''
     Given |trainExamples| and |testExamples| (each one is a list of (x,y)
     pairs), a |featureExtractor| to apply to x, and the number of iterations to
@@ -17,15 +17,15 @@ def learnPredictor(trainExamples, testExamples, featureExtractor, numIters, eta)
     '''
     weights = {}  # feature => weight
     def Loss(x, y, w):
-        return max(0, 1 - dotProduct(w, featureExtractor(x)) * y)
+        return max(0, 1 - dotProduct(w, featureExtractor(x, wordCounts)) * y)
 
     def Predictor(x):
-        return 1 if dotProduct(weights, featureExtractor(x)) > 0 else -1
+        return 1 if dotProduct(weights, featureExtractor(x, wordCounts)) > 0 else -1
 
     for i in range(numIters):
         for x, y in trainExamples:
             if Loss(x, y, weights) != 0:
-                increment(weights, eta * y, featureExtractor(x))
+                increment(weights, eta * y, featureExtractor(x, wordCounts))
             # print weights
             # print Predictor(x), y
         print 'Iteration ' + str(i)

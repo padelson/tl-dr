@@ -4,14 +4,14 @@ import tldrlib
 import util
 from process_data import *
 
-def learn_key_extractor(trainingData, testData, keywordFeatureExtractor, numIters, eta):
-    w = util.learnPredictor(trainingData, testData, keywordFeatureExtractor, numIters, eta)
+def learn_key_extractor(trainingData, testData, keywordFeatureExtractor, numIters, eta, wordCounts):
+    w = util.learnPredictor(trainingData, testData, keywordFeatureExtractor, numIters, eta, wordCounts)
     f = open('key_extractor_weights.txt', 'w')
     f.write(str(json.dumps(w)))
     f.close()
     return w
 
-def extract_keys(text):
+def extract_keys(text, wordCounts):
     f = open('key_extractor_weights.txt', 'r')
     w = json.loads(f.readline())
     f.close()
@@ -19,7 +19,7 @@ def extract_keys(text):
     candidates = collections.defaultdict(list)
     for entry in data:
         text, word, pos = entry
-        score = tldrlib.getScore(entry, tldrlib.keywordFeatureExtractor, w)
+        score = tldrlib.getScore(entry, tldrlib.keywordFeatureExtractor, w, wordCounts)
         candidates[pos].append((score,word))
     return candidates
 
