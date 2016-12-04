@@ -1,0 +1,156 @@
+Iteration 4
+Training Error: 0.0213619791029
+Test Error: 0.0241642228739
+
+{u'pos: ADJ': 0.6600000000000004, 'isCapital': 0.05999999999999998, 'length / 5 = 21': -0.01, 'count / 10 = 30': -0.01, 'word is in first 100': 0.049999999999999975, 'location2': -2.0000000000000013, 'location0': -1.8900000000000012, 'location1': -1.9200000000000013, u'pos: NOUN': 0.6600000000000004, 'count / 10 = 2': 0.12999999999999998, 'count / 10 = 0': -0.5200000000000002, 'count / 10 = 1': 2.3299999999999943, 'count / 10 = 5': 0.05, 'length / 5 = 10': -0.01, 'tf-idf': 0.0029809602952987823, u'pos: VERB': 0.6600000000000004, 'length / 5 = 9': -0.01, 'length / 5 = 8': -0.01, 'length / 5 = 5': 0.02, 'length / 5 = 4': -0.03, 'length / 5 = 6': 0.02, 'length / 5 = 1': 0.6200000000000004, 'length / 5 = 0': 0.6600000000000004, 'length / 5 = 3': 0.18000000000000002, 'length / 5 = 2': 0.5500000000000003}
+The govt should not get into building Ram temple: Keshubhai Patel
+NOUN BJP  VERB was  ADJ tallest
+
+neurosciencenews:
+
+New Technology Enables Completely Paralyzed...
+NOUN Legs  VERB take  ADJ spinal
+
+Floyd Mayweather ready to hang up gloves as 'the best ever'
+ADJ Rocky  VERB ends  NOUN Jr.
+
+High schools: Volleyball notebook for Sept. 22
+ADJ 25-22)  VERB advancing  NOUN NOAH
+
+Macrocure  Shares Down 5.3%  (MCUR)
+ADJ low  VERB had  NOUN rating
+
+Emmerdale: Natalie Anderson exit interview - Alicia cannot stay in the village
+ADJ torn  VERB opts  NOUN A
+
+Three of 4 Nissan outlets shut, car owners driven to despair
+ADJ Japanese  VERB one,  NOUN Amit
+
+Should The Black Lives Matter Movement Hold A Presidential Candidate Forum To Address Our Issues?
+ADJ forum,  VERB told  NOUN Now,
+
+Wall St rises as Fed officials confident of rate rise
+ADJ central  VERB cope  NOUN US
+
+Inland port in Tauranga’s backyard
+ADJ due  VERB ago.  NOUN Port
+
+Target Steps Up Price-Matching
+ADJ low  VERB win  NOUN Oct.
+
+Canadian National Railways and Union Bank to Present WhereScape Data Warehouse Automation Use Cases at TDWI
+ADJ Canadian  VERB is  NOUN Bond
+
+BHP Billiton and Rio Tinto shares plunge on China worries
+ADJ early  VERB warn  NOUN Blue
+
+Get Out This Weekend: Freddy's Haunts
+VERB explores  NOUN Tady
+
+Homeland returns with a new direction - and the spies are happy
+ADJ real  VERB gone  NOUN Long
+
+China Unsaturated Polyester Resin for Transfer Molding Industry Market Research Report 2015
+NOUN Chapter  VERB discussed  ADJ in-depth
+
+Three-month-old baby girl dies under suspicious circumstances in Heathcote
+ADJ further  VERB died  NOUN No
+
+10 ways you're helping your child fail in school and don't even realize it
+ADJ late  VERB ask  NOUN Let
+
+Positive Sentiment Sustained With N72 Billion
+ADJ worth  VERB Indices  NOUN kobo,
+
+Hilo man, 26, charged with theft of county vehicles, ukulele
+ADJ open  VERB exit  NOUN Blue
+
+LOT and Frankfurt airport celebrate the 50th anniversary of Warsaw- Frankfurt flights
+ADJ German  VERB operated  NOUN Home
+
+Nothing is Given: Hayden Hamby
+ADJ 2015-16  VERB can  NOUN WEST
+
+The Latest: Pope lauds Cuba's private 'mission houses'
+ADJ less  VERB Speaking  NOUN Cuba
+
+Varian Puts Research Tools in the Cloud to Speed Development of Next Generation Cancer Treatment Technologies
+NOUN PALO  VERB empower  ADJ _
+
+7-year-old girl shot, killed at birthday party, 3 others injured
+ADJ multiple  VERB shot  NOUN WBTV
+
+The Tom and Jerry Show: 'PM; Watson will run the Labour show while 'President' Corbyn carries on campaigning
+ADJ more  VERB take  NOUN PM’s
+
+Five key plays from Texas State's home opener
+ADJ 27-3  VERB pin  NOUN A
+
+JoJo Is Back With a Sexy New Video, Admits Her 2000s Hits 'Take On a New Meaning' Today
+ADJ Free  VERB Won  NOUN Hit
+
+Northern Spirit Resources Inc. Announces Third Closing of Private Placement Financing
+ADJ common  VERB issuing  NOUN Common
+
+Mailbag: Who Starts At RB? Is The Fifth WR On The Roster Right Now?
+ADJ last  VERB out?  NOUN RB
+
+Ahead of Sept 16 rally, red T-shirts promoting ‘Malay dignity uprising’ on sale outside PWTC
+ADJ red  VERB According  NOUN RM10
+
+1 Dead, 2 Injured In Sacramento City College Shooting
+ADJ other  VERB shot  NOUN City
+
+Forever Young
+ADJ righteous  VERB let  NOUN God
+
+21 Reasons You're About to Be Obsessed With the Style on Empire
+ADJ last  VERB saw  NOUN Wed.
+
+Breen has funding cut from Athletics Australia
+ADJ poor  VERB paid  NOUN Melissa
+
+Mediterranean Veg Tart & Apple Custard Tart
+NOUN Bake  VERB can  ADJ #GBBO
+
+3 easy steps to upgrade your computer to the latest operating system
+ADJ best  VERB love  NOUN PC,
+
+I despise my EHR.  But I’m still using it.
+ADJ up,  VERB use  NOUN U.S.
+
+Mayor: Save items from old Kaufmann's building before Macy's closes
+ADJ sure  VERB sell  NOUN Bill
+
+Market Research Report on Agrochemicals Market by Type (Fertilizers, Pesticides) - Global Market Trends & Forecast to 2018
+ADJ Global  VERB revenue.  NOUN Type
+
+Baidu take on Siri and Google Now with Duer AI assistant
+NOUN Baidu  VERB app  ADJ Chinese
+
+Hamilton wins at Monza despite FIA tyre investigation
+ADJ due  VERB took  NOUN AMG
+
+Clinton: End Obamacare tax on top health plans
+ADJ top  VERB go  NOUN Care
+
+South Street Seaport is getting a seafood-themed food hall
+ADJ summer’s  VERB be  NOUN NY
+
+Patrick Towles bounces back with a huge win over Missouri
+ADJ fun.  VERB Give  NOUN Towles’
+
+256 The Uplands, Berkeley
+ADJ unusual  VERB are  NOUN Jack
+
+Wayfair CEO Niraj Shah to Present at Goldman Sachs 22nd Annual Global Retailing Conference
+ADJ nd  VERB Present  NOUN Shah
+
+Taking stock of minimum wage around the world
+NOUN Marketplace  VERB give  ADJ 
+
+Victor Cruz expected to play in Week 4
+ADJ wide  VERB set  NOUN NFL
+
+Irene Kovach
+ADJ late  VERB born  NOUN Ruby
