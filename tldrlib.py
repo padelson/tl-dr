@@ -34,7 +34,9 @@ def keywordFeatureExtractor(x, wordCounts, wikiCounts):
 
     phi["term length / 100 = " + str(wordCount / 100)] = 1
 
-    phi["word is in first 100"] = 1 if testWord in article.split()[:100] else 0
+    phi["word is in first 50"] = 1 if testWord in article.split()[:50] else 0
+    phi["word is in first & last 50"] = 1 if testWord in article.split()[-50:] and testWord in article.split()[:50] else 0
+    phi["word freq in first 100"] = len([testWord for word in article.split()[:100] if word == testWord])
 
     # length
     length = len(testWord)

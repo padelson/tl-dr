@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-import os, random, operator, sys
+import os, random, operator, sys, math
 from collections import Counter
 
 ##################################################################################################
@@ -17,16 +17,19 @@ def learnPredictor(trainExamples, testExamples, featureExtractor, numIters, eta,
     '''
     weights = {}  # feature => weight
     def Loss(x, y, w):
-        # return (dotProduct(w, featureExtractor(x, wordCounts, wikiCounts)) - y) ** 2
-        return max(0, 1 - dotProduct(w, featureExtractor(x, wordCounts, wikiCounts)) * y)
+        return math.log(1 + math.e**(-dotProduct(w, featureExtractor(x, wordCounts)) * y))
 
     def Predictor(x):
-        return 1 if dotProduct(weights, featureExtractor(x, wordCounts, wikiCounts)) > 0 else -1
+        return 1 if (1 + math.exp(-dotProduct(weights, featureExtractor(x, wordCounts))))**-1 > 0.5 else 0
 
     for i in range(numIters):
+        random.shuffle(trainExamples)
         for x, y in trainExamples:
-            if Loss(x, y, weights) != 0:
-                increment(weights, eta * y, featureExtractor(x, wordCounts, wikiCounts))
+            h = (1 + math.exp(-dotProduct(weights, featureExtractor(x, wordCounts))))**-1
+            increment(weights, -eta*(h - y), featureExtractor(x, wordCounts))
+
+            #if Loss(x, y, weights) != 0:
+            #    (weights, eta * y, featureExtractor(x, wordCounts))
             # print weights
             # print Predictor(x), y
         print 'Iteration ' + str(i)
