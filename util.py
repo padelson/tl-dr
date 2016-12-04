@@ -17,6 +17,7 @@ def learnPredictor(trainExamples, testExamples, featureExtractor, numIters, eta,
     '''
     weights = {}  # feature => weight
     def Loss(x, y, w):
+        # return (dotProduct(w, featureExtractor(x, wordCounts, wikiCounts)) - y) ** 2
         return max(0, 1 - dotProduct(w, featureExtractor(x, wordCounts, wikiCounts)) * y)
 
     def Predictor(x):
