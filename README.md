@@ -3,15 +3,11 @@ Stanford University CS221 Project: generating summaries for bodies of text
 
 Run tldr.py
 
-SEE output.txt FOR RESULTS OF MOST RECENT UPDATE
-
 # TODOS:
 -   figure out how to process data efficiently so we can run this on a big data set
--   try different classifiers
--   try different loss functions
--   switch from util.py to sklearn?  so that we can host this code publicly
--   figure out how to rate generated summaries
--   implement remaining features
+-   refactor so we extract features only once
+-   GET A BETTER dataset
+-   feature for location in text exponentially/fibonaccically
 -   do better on summary generation.  the plan now is to turn it into a search problem.
 -   EVALUATE GENERATED SUMMARIES SOMEHOW.
 -   add command line functionality to tldr.py, key_ex.py, and sum_gen.py  

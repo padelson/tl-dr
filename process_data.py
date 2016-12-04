@@ -1,13 +1,17 @@
 import collections
 import json
 import nltk
+import string
+
+def removePunc(text):
+    return text.translate(None, string.punctuation)
 
 def get_words_to_learn(body, stopWords):
     desired_tags = ['NOUN', 'ADJ', 'VERB']
     tagged = nltk.pos_tag(body, tagset='universal')
     #TODO: remove punctuations
     #TODO: instead of returning the word itself(t[0]), stem it
-    return [t for t in tagged if t[1] in desired_tags and t[0] not in stopWords]
+    return [t for t in tagged if t[1] in desired_tags and t[0].lower() not in stopWords]
 
 def get_data_entries(text):
     # (article, word, part of speech)
@@ -60,8 +64,10 @@ def process_data(num_samples=-1):
         raw_count += 1
         print 'processing raw entry ' + str(raw_count)
 
+        title_words_to_learn = get_words_to_learn(title.split(), stopWords)
+        title_words_to_learn_final = [w for w in title_words_to_learn if w[0] in content.split()]
         #every word in the title is assumed to be a keyword
-        for word_pos in get_words_to_learn(title.split(), stopWords):
+        for word_pos in title_words_to_learn_final:
             word, pos = word_pos
             entry = {'content': content, 'word': word,
                      'title': title, 'keyWord': 1, 'pos': pos}
@@ -71,7 +77,7 @@ def process_data(num_samples=-1):
                 print 'entry ' + str(entry_count) + ' added'
 
         #every word not in the title is assumed to not be a keyword
-        non_keywords = [w for w in content.split()[:150] if w not in title.split()]
+        non_keywords = [w for w in content.split()[:150] if w.lower() not in title.lower().split()]
 
         for word_pos in get_words_to_learn(set(non_keywords), stopWords):
             word, pos = word_pos

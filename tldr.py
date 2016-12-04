@@ -20,9 +20,9 @@ for k in trainingDataKeys:
 	trainingData += data[k]
 for k in testDataKeys:
 	testData += data[k]
-    
 
-w = learn_key_extractor(trainingData, testData, tldrlib.keywordFeatureExtractor, 50, 0.005, wordCounts, wikiCounts)
+
+w = learn_key_extractor(trainingData, testData, tldrlib.keywordFeatureExtractor, 15, 0.0001, wordCounts, wikiCounts)
 print w
 
 for k in testDataKeys:
