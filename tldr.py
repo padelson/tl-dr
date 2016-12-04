@@ -8,7 +8,8 @@ from process_data import *
 
 print "learning"
 
-trainingData = get_data(10000)
+process_data(1000)
+data = get_data(10000)
 w = learnPredictor(trainingData, trainingData, keywordFeatureExtractor, 100, 0.001)
 
 print w
