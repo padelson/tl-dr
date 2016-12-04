@@ -65,7 +65,7 @@ def process_data(num_samples=-1):
         for word_pos in get_words_to_learn(set(non_keywords)):
             word, pos = word_pos
             entry = {'content': content, 'word': word,
-                     'title': title, 'keyWord': -1, 'pos': pos}
+                     'title': title, 'keyWord': 0, 'pos': pos}
             f2.write(str(json.dumps(entry)) + '\n')
             entry_count += 1
             if entry_count % 100 == 0:
@@ -127,6 +127,6 @@ def get_oracle_data(num_samples=-1):
     return entries
 
 
-# process_data(500)
+#process_data(500)
 # print get_data(1000)
 # print get_oracle_data(100)
