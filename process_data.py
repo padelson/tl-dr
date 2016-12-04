@@ -1,17 +1,21 @@
 import collections
 import json
 import nltk
+import string
 
-def get_words_to_learn(body):
+def removePunc(text):
+    return text.translate(None, string.punctuation)
+
+def get_words_to_learn(body, stopWords):
     desired_tags = ['NOUN', 'ADJ', 'VERB']
     tagged = nltk.pos_tag(body, tagset='universal')
     #TODO: remove punctuations
     #TODO: instead of returning the word itself(t[0]), stem it
-    return [t for t in tagged if t[1] in desired_tags]
+    return [t for t in tagged if t[1] in desired_tags and t[0].lower() not in stopWords]
 
 def get_data_entries(text):
     # (article, word, part of speech)
-    words = get_words_to_learn(text.split())
+    words = get_words_to_learn(text.split(), getStopWords())
     entries = []
     for word_pos in words:
         word, pos = word_pos
@@ -26,6 +30,17 @@ def getWordCounts(data):
             wordCounts[w] += 1
     return wordCounts
 
+def getStopWords():
+    f3 = open('english.stop', 'r')
+    stopWords = []
+    while (True):
+        line = f3.readline()
+        if not line:
+            break
+        stopWords.append(line[:-1])
+    f3.close()
+    return stopWords
+
 # Examples are written to processed_data.txt as a map containing:
 #     content: the content of the article
 #     word: the word in question (is it a keyword or nah? that is the question)
@@ -35,7 +50,7 @@ def getWordCounts(data):
 def process_data(num_samples=-1):
     f1 = open('raw_data.txt', 'r')
     f2 = open('processed_data.txt', 'w')
-
+    stopWords = getStopWords()
     raw_count = 0
     entry_count = 0
     while (True):
@@ -49,8 +64,10 @@ def process_data(num_samples=-1):
         raw_count += 1
         print 'processing raw entry ' + str(raw_count)
 
+        title_words_to_learn = get_words_to_learn(title.split(), stopWords)
+        title_words_to_learn_final = [w for w in title_words_to_learn if w[0] in content.split()]
         #every word in the title is assumed to be a keyword
-        for word_pos in get_words_to_learn(title.split()):
+        for word_pos in title_words_to_learn_final:
             word, pos = word_pos
             entry = {'content': content, 'word': word,
                      'title': title, 'keyWord': 1, 'pos': pos}
@@ -60,9 +77,9 @@ def process_data(num_samples=-1):
                 print 'entry ' + str(entry_count) + ' added'
 
         #every word not in the title is assumed to not be a keyword
-        non_keywords = [w for w in content.split() if w not in title.split()]
+        non_keywords = [w for w in content.split()[:150] if w.lower() not in title.lower().split()]
 
-        for word_pos in get_words_to_learn(set(non_keywords)):
+        for word_pos in get_words_to_learn(set(non_keywords), stopWords):
             word, pos = word_pos
             entry = {'content': content, 'word': word,
                      'title': title, 'keyWord': 0, 'pos': pos}
@@ -74,7 +91,15 @@ def process_data(num_samples=-1):
     f1.close()
     f2.close()
 
-
+def getWikiCounts():
+    f = open('wikipedia_tf.txt', 'r')
+    counts = collections.defaultdict(int)
+    while (True):
+        line = f.readline().split()
+        if not line:
+            break
+        counts[line[0]] = int(line[1])
+    return counts
 
 # Reads processed_data.txt to obtain all examples and returns an array
 # of example points, where each point is of the form: (article, word, part of speech) , isKeyWord
@@ -83,6 +108,7 @@ def get_data(num_samples=-1):
     entries = collections.defaultdict(list)
     wordCounts = collections.defaultdict(float)
     count = 0
+    numKeyWordEntries = 0
     while (True):
         line = f.readline()
         if line == '' or (count == num_samples and num_samples is not -1):
@@ -96,8 +122,15 @@ def get_data(num_samples=-1):
         # entry is of the form: (article, word, part of speech) , isKeyWord
         entry = ((line_obj['content'], line_obj['word'], line_obj['pos']), line_obj['keyWord'])
         entries[line_obj['title']].append(entry)
+
+        if line_obj['keyWord'] == 1:
+            numKeyWordEntries += 1
     f.close()
-    return entries, wordCounts
+    print "number of data entries: " + str(count)
+    print "number of positive entries: " + str(numKeyWordEntries)
+
+
+    return entries, wordCounts, getWikiCounts()
 
 
 # Can indicate num_samples, to choose how many raw data points
@@ -127,6 +160,6 @@ def get_oracle_data(num_samples=-1):
     return entries
 
 
-#process_data(500)
+process_data(500)
 # print get_data(1000)
 # print get_oracle_data(100)

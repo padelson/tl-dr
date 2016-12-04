@@ -7,7 +7,7 @@ from sum_gen import *
 #TODO: read input args
 
 
-data, wordCounts = get_data()
+data, wordCounts, wikiCounts = get_data()
 
 #split data into training and test data sets
 keys = data.keys()
@@ -20,12 +20,13 @@ for k in trainingDataKeys:
 	trainingData += data[k]
 for k in testDataKeys:
 	testData += data[k]
-# wordCounts = getWordCounts(data)
-w = learn_key_extractor(trainingData, testData, tldrlib.keywordFeatureExtractor, 5, 0.01, wordCounts)
+
+
+w = learn_key_extractor(trainingData, testData, tldrlib.keywordFeatureExtractor, 15, 0.0001, wordCounts, wikiCounts)
 print w
 
 for k in testDataKeys:
     text = data[k][0][0][0]
     print k
-    print generate_summary(text, wordCounts)
+    print generate_summary(text, wordCounts, wikiCounts)
     print
