@@ -3,6 +3,8 @@ Stanford University CS221 Project: generating summaries for bodies of text
 
 Run tldr.py
 
+SEE output.txt FOR RESULTS OF MOST RECENT UPDATE
+
 # TODOS:
 -   figure out how to process data efficiently so we can run this on a big data set
 -   try different classifiers
