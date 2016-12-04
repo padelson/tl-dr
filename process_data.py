@@ -2,16 +2,16 @@ import collections
 import json
 import nltk
 
-def get_words_to_learn(body):
+def get_words_to_learn(body, stopWords):
     desired_tags = ['NOUN', 'ADJ', 'VERB']
     tagged = nltk.pos_tag(body, tagset='universal')
     #TODO: remove punctuations
     #TODO: instead of returning the word itself(t[0]), stem it
-    return [t for t in tagged if t[1] in desired_tags]
+    return [t for t in tagged if t[1] in desired_tags and t[0] not in stopWords]
 
 def get_data_entries(text):
     # (article, word, part of speech)
-    words = get_words_to_learn(text.split())
+    words = get_words_to_learn(text.split(), getStopWords())
     entries = []
     for word_pos in words:
         word, pos = word_pos
@@ -26,6 +26,17 @@ def getWordCounts(data):
             wordCounts[w] += 1
     return wordCounts
 
+def getStopWords():
+    f3 = open('english.stop', 'r')
+    stopWords = []
+    while (True):
+        line = f3.readline()
+        if not line:
+            break
+        stopWords.append(line[:-1])
+    f3.close()
+    return stopWords
+
 # Examples are written to processed_data.txt as a map containing:
 #     content: the content of the article
 #     word: the word in question (is it a keyword or nah? that is the question)
@@ -35,7 +46,7 @@ def getWordCounts(data):
 def process_data(num_samples=-1):
     f1 = open('raw_data.txt', 'r')
     f2 = open('processed_data.txt', 'w')
-
+    stopWords = getStopWords()
     raw_count = 0
     entry_count = 0
     while (True):
@@ -50,7 +61,7 @@ def process_data(num_samples=-1):
         print 'processing raw entry ' + str(raw_count)
 
         #every word in the title is assumed to be a keyword
-        for word_pos in get_words_to_learn(title.split()):
+        for word_pos in get_words_to_learn(title.split(), stopWords):
             word, pos = word_pos
             entry = {'content': content, 'word': word,
                      'title': title, 'keyWord': 1, 'pos': pos}
@@ -60,9 +71,9 @@ def process_data(num_samples=-1):
                 print 'entry ' + str(entry_count) + ' added'
 
         #every word not in the title is assumed to not be a keyword
-        non_keywords = [w for w in content.split() if w not in title.split()]
+        non_keywords = [w for w in content.split()[:150] if w not in title.split()]
 
-        for word_pos in get_words_to_learn(set(non_keywords)):
+        for word_pos in get_words_to_learn(set(non_keywords), stopWords):
             word, pos = word_pos
             entry = {'content': content, 'word': word,
                      'title': title, 'keyWord': 0, 'pos': pos}
@@ -143,6 +154,6 @@ def get_oracle_data(num_samples=-1):
     return entries
 
 
-#process_data(500)
+process_data(500)
 # print get_data(1000)
 # print get_oracle_data(100)

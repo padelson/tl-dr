@@ -19,22 +19,22 @@ def learnPredictor(trainExamples, testExamples, featureExtractor, numIters, eta,
     def Loss(x, y, w):
         return math.log(1 + math.e**(-dotProduct(w, featureExtractor(x, wordCounts)) * y))
 
-    def Predictor(x):
-        return 1 if (1 + math.exp(-dotProduct(weights, featureExtractor(x, wordCounts))))**-1 > 0.5 else 0
+    def Predictor(x, wordCounts, wikiCounts):
+        return 1 if (1 + math.exp(-dotProduct(weights, featureExtractor(x, wordCounts, wikiCounts))))**-1 > 0.5 else 0
 
     for i in range(numIters):
         random.shuffle(trainExamples)
         for x, y in trainExamples:
-            h = (1 + math.exp(-dotProduct(weights, featureExtractor(x, wordCounts))))**-1
-            increment(weights, -eta*(h - y), featureExtractor(x, wordCounts))
+            h = (1 + math.exp(-dotProduct(weights, featureExtractor(x, wordCounts, wikiCounts))))**-1
+            increment(weights, -eta*(h - y), featureExtractor(x, wordCounts, wikiCounts))
 
             #if Loss(x, y, weights) != 0:
             #    (weights, eta * y, featureExtractor(x, wordCounts))
             # print weights
             # print Predictor(x), y
         print 'Iteration ' + str(i)
-        print 'Training Error: ' + str(evaluatePredictor(trainExamples, Predictor))
-        print 'Test Error: ' + str(evaluatePredictor(testExamples, Predictor))
+        print 'Training Error: ' + str(evaluatePredictor(trainExamples, Predictor, wordCounts, wikiCounts))
+        print 'Test Error: ' + str(evaluatePredictor(testExamples, Predictor, wordCounts, wikiCounts))
         print ''
 
     # END_YOUR_CODE
@@ -76,7 +76,7 @@ def readExamples(path):
     print 'Read %d examples from %s' % (len(examples), path)
     return examples
 
-def evaluatePredictor(examples, predictor):
+def evaluatePredictor(examples, predictor, wordCounts, wikiCounts):
     '''
     predictor: a function that takes an x and returns a predicted y.
     Given a list of examples (x, y), makes predictions based on |predict| and returns the fraction
@@ -84,7 +84,7 @@ def evaluatePredictor(examples, predictor):
     '''
     error = 0
     for x, y in examples:
-        if predictor(x) != y:
+        if predictor(x, wordCounts, wikiCounts) != y:
             error += 1
     return 1.0 * error / len(examples)
 
