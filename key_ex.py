@@ -18,7 +18,7 @@ def extract_keys(text, wordCounts, wikiCounts):
     data = get_data_entries(text)
     candidates = collections.defaultdict(list)
     for entry in data:
-        text, word, pos = entry
+        features, word, pos = entry
         score = tldrlib.getScore(entry, tldrlib.keywordFeatureExtractor, w, wordCounts, wikiCounts)
         candidates[pos].append((score,word))
     return candidates

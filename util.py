@@ -20,13 +20,15 @@ def learnPredictor(trainExamples, testExamples, featureExtractor, numIters, eta,
         return math.log(1 + math.e**(-dotProduct(w, featureExtractor(x, wordCounts)) * y))
 
     def Predictor(x, wordCounts, wikiCounts):
-        return 1 if (1 + math.exp(-dotProduct(weights, featureExtractor(x, wordCounts, wikiCounts))))**-1 > 0.5 else 0
+        features = x[0]
+        return 1 if (1 + math.exp(-dotProduct(weights, features)))**-1 > 0.5 else 0
 
     for i in range(numIters):
         random.shuffle(trainExamples)
         for x, y in trainExamples:
-            h = (1 + math.exp(-dotProduct(weights, featureExtractor(x, wordCounts, wikiCounts))))**-1
-            increment(weights, -eta*(h - y), featureExtractor(x, wordCounts, wikiCounts))
+            features = x[0]
+            h = (1 + math.exp(-dotProduct(weights, features)))**-1
+            increment(weights, -eta*(h - y), features)
 
             #if Loss(x, y, weights) != 0:
             #    (weights, eta * y, featureExtractor(x, wordCounts))

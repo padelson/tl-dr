@@ -25,8 +25,11 @@ for k in testDataKeys:
 w = learn_key_extractor(trainingData, testData, tldrlib.keywordFeatureExtractor, 15, 0.0001, wordCounts, wikiCounts)
 print w
 
+articles = getArticlesDict()
+
+
 for k in testDataKeys:
-    text = data[k][0][0][0]
+    text = articles[k]
     print k
     print generate_summary(text, wordCounts, wikiCounts)
     print
