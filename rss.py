@@ -109,7 +109,7 @@ def getKeywordCandidates(text):
     desired_tags = ['NOUN', 'ADJ', 'VERB']
     text = ''.join([ch.lower() for ch in text if ch.isalnum() or ch.isspace()])
     tagged = nltk.pos_tag(text.split(), tagset='universal')
-    return [ps.stem(t[0]) for t in tagged if t[1] in desired_tags and t[0] not in stopwords]
+    return [t[0] for t in tagged if t[1] in desired_tags and t[0] not in stopwords]
 
 def buildDataset():
     global newsurls
@@ -120,7 +120,6 @@ def buildDataset():
     for key,url in newsurls.items():
         print key
         allLinks.extend(getLinks(url))
-    rss_data.write(str(len(allLinks)) + '\n')
 
     # Iterate over the allLinks list and write data
     for link in allLinks:
@@ -145,7 +144,7 @@ def buildDataset():
         for p in paras:
             article += "\n" + p.getText() + "\n"
         entry['content'] = article
-        rss_data.write(str(entry) + '\n')
+        rss_data.write(str(json.dumps(entry)) + '\n')
 
     rss_data.close()
 
