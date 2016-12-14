@@ -47,8 +47,8 @@ def keywordFeatureExtractor(x, wordCounts, wikiCounts):
 
     # phi["pos: " + pos] = 1
 
-    if wordCounts[testWord] > 0:
-        phi['tf-idf'] = float(count) / wordCounts[testWord]
+    # if wordCounts[testWord] > 0:
+    #     phi['tf-idf'] = float(count) / wordCounts[testWord]
 
     if wikiCounts[testWord] > 0:
         phi["wiki count / 1000: " + str(wikiCounts[testWord] / 1000)] = 1

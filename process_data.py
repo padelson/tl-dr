@@ -2,6 +2,7 @@ import collections
 import json
 import nltk
 import string
+import tldrlib
 
 def removePunc(text):
     return text.translate(None, string.punctuation)
@@ -50,9 +51,11 @@ def getStopWords():
 def process_data(num_samples=-1):
     f1 = open('raw_data.txt', 'r')
     f2 = open('processed_data.txt', 'w')
+    f3 = open('articles.txt', 'w')
     stopWords = getStopWords()
     raw_count = 0
     entry_count = 0
+    articles = {}
     while (True):
         line = f1.readline()
         if line == '' or (raw_count == num_samples and num_samples is not -1):
@@ -88,8 +91,26 @@ def process_data(num_samples=-1):
             if entry_count % 100 == 0:
                 print 'entry ' + str(entry_count) + ' added'
 
+        articles[title] = content
+
+    f3.write(str(json.dumps(articles)))
+
     f1.close()
     f2.close()
+    f3.close()
+
+def getArticlesDict():
+    f = open('articles.txt', 'r')
+    articles = collections.defaultdict(str)
+    while (True):
+        line = f.readline()
+        if not line:
+            break
+        line_obj = json.loads(line)
+        for k in line_obj:
+            articles[k] = line_obj[k]
+
+    return articles
 
 def getWikiCounts():
     f = open('wikipedia_tf.txt', 'r')
@@ -107,6 +128,7 @@ def get_data(num_samples=-1):
     f = open('processed_data.txt', 'r')
     entries = collections.defaultdict(list)
     wordCounts = collections.defaultdict(float)
+    wikiCounts = getWikiCounts()
     count = 0
     numKeyWordEntries = 0
     while (True):
@@ -121,7 +143,8 @@ def get_data(num_samples=-1):
         wordCounts[line_obj['word']] += 1
         # entry is of the form: (article, word, part of speech) , isKeyWord
         entry = ((line_obj['content'], line_obj['word'], line_obj['pos']), line_obj['keyWord'])
-        entries[line_obj['title']].append(entry)
+        features = tldrlib.keywordFeatureExtractor(entry[0], wordCounts, wikiCounts)
+        entries[line_obj['title']].append(((features, line_obj['word'], line_obj['pos']), line_obj['keyWord']))
 
         if line_obj['keyWord'] == 1:
             numKeyWordEntries += 1
@@ -130,7 +153,7 @@ def get_data(num_samples=-1):
     print "number of positive entries: " + str(numKeyWordEntries)
 
 
-    return entries, wordCounts, getWikiCounts()
+    return entries, wordCounts, wikiCounts
 
 
 # Can indicate num_samples, to choose how many raw data points
@@ -160,6 +183,6 @@ def get_oracle_data(num_samples=-1):
     return entries
 
 
-process_data(500)
+process_data(10)
 # print get_data(1000)
 # print get_oracle_data(100)
