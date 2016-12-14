@@ -4,15 +4,11 @@ import nltk
 import string
 import tldrlib
 
-def removePunc(text):
-    return text.translate(None, string.punctuation)
-
 def get_words_to_learn(body, stopWords):
     desired_tags = ['NOUN', 'ADJ', 'VERB']
     tagged = nltk.pos_tag(body, tagset='universal')
-    #TODO: remove punctuations
     #TODO: instead of returning the word itself(t[0]), stem it
-    return [t for t in tagged if t[1] in desired_tags and t[0].lower() not in stopWords]
+    return [ (tldrlib.removePuncation(t[0]), t[1]) for t in tagged if t[1] in desired_tags and t[0].lower() not in stopWords and tldrlib.removePuncation(t[0].lower()) not in stopWords and t[0] != '\u2014']
 
 def get_data_entries(text):
     # (article, word, part of speech)
@@ -49,7 +45,7 @@ def getStopWords():
 #     pos: part of speech of word
 #     keyWord: -1 or 1 indicating whether the word is a keyword (1 if yes)
 def process_data(num_samples=-1):
-    f1 = open('raw_data.txt', 'r')
+    f1 = open('rss_data.txt', 'r')
     f2 = open('processed_data.txt', 'w')
     f3 = open('articles.txt', 'w')
     stopWords = getStopWords()
@@ -62,7 +58,7 @@ def process_data(num_samples=-1):
             break
 
         line_obj = json.loads(line)
-        title = line_obj['title']
+        title = line_obj['gold']
         content = line_obj['content']
         raw_count += 1
         print 'processing raw entry ' + str(raw_count)
@@ -148,6 +144,12 @@ def get_data(num_samples=-1):
 
         if line_obj['keyWord'] == 1:
             numKeyWordEntries += 1
+            #print 'keyword'
+            #print line_obj['word']
+            #print features
+            #if count % 100 == 0:
+            #print line_obj['word']
+            #print features
     f.close()
     print "number of data entries: " + str(count)
     print "number of positive entries: " + str(numKeyWordEntries)
@@ -183,6 +185,6 @@ def get_oracle_data(num_samples=-1):
     return entries
 
 
-process_data(10)
+process_data(100)
 # print get_data(1000)
 # print get_oracle_data(100)
