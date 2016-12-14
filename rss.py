@@ -144,6 +144,9 @@ def buildDataset():
         article = ""
         for p in paras:
             article += "\n" + p.getText() + "\n"
+        if article == "":
+            # no article given
+            continue
         entry['content'] = article
         rss_data.write(str(entry) + '\n')
 
