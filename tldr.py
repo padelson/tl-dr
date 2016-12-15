@@ -21,6 +21,7 @@ for k in trainingDataKeys:
 for k in testDataKeys:
 	testData += data[k]
 
+# dumbass_predictor(trainingData)
 
 w = learn_key_extractor(trainingData, testData, tldrlib.keywordFeatureExtractor, 15, 0.0001, wordCounts, wikiCounts)
 print w

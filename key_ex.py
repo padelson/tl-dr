@@ -30,15 +30,15 @@ def extract_keys1(path):
     return extrat_keys(text)
 
 def dumbass_predictor(data):
-	error = 0
-	for d in data:
-		firstSentence = d[0][0].split('.')[0]
-		prediction = None
-		if d[0][1] in firstSentence:
-			prediction = 1
-		else:
-			prediction = -1
-		if prediction != d[1]:
-			error +=1
-	print '\n\nnumWrong, numDataPoints, error'
-	print error, len(data), error/float(len(data))
+    error = 0
+    for d in data:
+        firstSentence = d[0][0]["word is in first 200"]
+        prediction = None
+        if firstSentence == 1:
+            prediction = 1
+        else:
+            prediction = -1
+        if prediction != d[1]:
+            error +=1
+    print '\n\nnumWrong, numDataPoints, error'
+    print error, len(data), error/float(len(data))

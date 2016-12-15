@@ -60,7 +60,7 @@ def keywordFeatureExtractor(x, wordCounts, wikiCounts):
     # phi["length < 4"] = 1 if length < 4 else 0
     phi["word length / 5 = " + str(length / 5)] = 1
     # isCapital
-    phi["isCapital"] = 1 if testWord[0].isupper() else 0
+    phi["isCapital"] = 1 if testWord[0].title() in article else 0
     phi["isCapital freq"] = count if phi["isCapital"] else 0
     phi["isCapital freq > 2"] = 1 if phi["isCapital"] and count > 2 else 0
     phi["isCapital freq > 3"] = 1 if phi["isCapital"] and count > 3 else 0
