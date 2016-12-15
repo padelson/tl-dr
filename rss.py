@@ -1,8 +1,9 @@
 #!/usr/bin/python
 # RSS --> rss_data.txt
-import feedparser, urllib2, json, nltk, string, re
+import feedparser, urllib2, json, nltk, string, re, tldrlib
 from bs4 import BeautifulSoup
 from PorterStemmer import PorterStemmer
+import sys
 
 def parseRSS( rss_url ):
     return feedparser.parse( rss_url )
@@ -85,12 +86,12 @@ newsurls = {
     'nyt-6thfloor': 'http://6thfloor.blogs.nytimes.com/feed/'
 }
 # shortened version for debugging
-"""
+
 newsurls = {
-    'nyt-world': 'http://rss.nytimes.com/services/xml/rss/nyt/World.xml',
+    #'nyt-world': 'http://rss.nytimes.com/services/xml/rss/nyt/World.xml',
     'nyt-war': 'http://atwar.blogs.nytimes.com/feed/'
 }
-"""
+
 
 ps = PorterStemmer()
 stop_f = open('english.stop', 'r')
@@ -142,12 +143,12 @@ def buildDataset():
         paras = html.findAll("p", { "class" : "story-body-text" })
         article = ""
         for p in paras:
-            article += "\n" + p.getText() + "\n"
+            article += " " + p.getText()
         if article == "":
             # no article given
             continue
         entry['content'] = article
-        rss_data.write(str(json.dumps(entry)) + '\n')
+        rss_data.write(json.dumps(entry) + '\n')
 
     rss_data.close()
 

@@ -3,16 +3,17 @@ import json
 import nltk
 import string
 import tldrlib
+import sys
 
 def get_words_to_learn(body, stopWords):
     desired_tags = ['NOUN', 'ADJ', 'VERB']
     tagged = nltk.pos_tag(body, tagset='universal')
     #TODO: instead of returning the word itself(t[0]), stem it
-    return [ (tldrlib.removePuncation(t[0]), t[1]) for t in tagged if t[1] in desired_tags and t[0].lower() not in stopWords and tldrlib.removePuncation(t[0].lower()) not in stopWords and t[0] != '\u2014']
+    return [ (tldrlib.removePunctuation(t[0]), t[1]) for t in tagged if t[1] in desired_tags and t[0].lower() not in stopWords and tldrlib.removePunctuation(t[0].lower()) not in stopWords and t[0] != '\u2014']
 
 def get_data_entries(text):
     # (article, word, part of speech)
-    words = get_words_to_learn(text.split(), getStopWords())
+    words = get_words_to_learn(list(set(text.split())), getStopWords())
     entries = []
     for word_pos in words:
         word, pos = word_pos
@@ -58,36 +59,36 @@ def process_data(num_samples=-1):
             break
 
         line_obj = json.loads(line)
-        title = line_obj['gold']
-        content = line_obj['content']
+        gold = tldrlib.preprocess(line_obj['gold'].encode('utf-8'))
+        content = tldrlib.preprocess(line_obj['content'].encode('utf-8'))
         raw_count += 1
         print 'processing raw entry ' + str(raw_count)
 
-        title_words_to_learn = get_words_to_learn(title.split(), stopWords)
+        title_words_to_learn = get_words_to_learn(gold.split(), stopWords)
         title_words_to_learn_final = [w for w in title_words_to_learn if w[0] in content.split()]
         #every word in the title is assumed to be a keyword
         for word_pos in title_words_to_learn_final:
             word, pos = word_pos
             entry = {'content': content, 'word': word,
-                     'title': title, 'keyWord': 1, 'pos': pos}
+                     'gold': gold, 'keyWord': 1, 'pos': pos}
             f2.write(str(json.dumps(entry)) + '\n')
             entry_count += 1
             if entry_count % 100 == 0:
                 print 'entry ' + str(entry_count) + ' added'
 
         #every word not in the title is assumed to not be a keyword
-        non_keywords = [w for w in content.split()[:150] if w.lower() not in title.lower().split()]
+        non_keywords = [w for w in content.split()[:150] if w.lower() not in gold.lower().split()]
 
         for word_pos in get_words_to_learn(set(non_keywords), stopWords):
             word, pos = word_pos
             entry = {'content': content, 'word': word,
-                     'title': title, 'keyWord': 0, 'pos': pos}
+                     'gold': gold, 'keyWord': 0, 'pos': pos}
             f2.write(str(json.dumps(entry)) + '\n')
             entry_count += 1
             if entry_count % 100 == 0:
                 print 'entry ' + str(entry_count) + ' added'
 
-        articles[title] = content
+        articles[gold] = content
 
     f3.write(str(json.dumps(articles)))
 

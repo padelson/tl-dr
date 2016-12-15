@@ -20,9 +20,8 @@ def generate_summary(text, wordCounts, wikiCounts):
     nouns = sorted(keywords['NOUN'])
     verbs = sorted(keywords['VERB'])
     adjs = sorted(keywords['ADJ'])
-    print nouns[-10:]
-    print verbs[-10:]
-    print adjs[-10:]
+    top_keywords = nouns[-10:] + verbs[-10:] + adjs[-10:]
+    mdp = SummaryMDP(top_keywords)
     result = ''
 
     return result
