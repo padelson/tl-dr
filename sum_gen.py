@@ -31,7 +31,7 @@ def generate_summary(text, wordCounts, wikiCounts):
     
     mdpH = mdp.headlineMDP(nouns = nouns, adjs = adjs, verbs = verbs)
     vi = mdp.ValueIteration()
-    vi.solve(mdpdpH)
+    vi.solve(mdpH)
     curr = mdpH.startState()
     best = 0
     headline = ""
