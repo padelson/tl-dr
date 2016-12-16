@@ -50,8 +50,18 @@ def extractKeywords( article ): keywords = {}
 #candidates as defined in 1.1 candidates = getCandidates( article ) for candidate in candidates :
 of speech. Using this information, we con- tinue onto the next part of the process: turn- ing these keywords into a headline.
 4 Summary Generation
-Once keywords were selected, Headline generation was modeled as a search problem. Words were appended to the headline following a basic CFG model and the end state that maximized an evaluation function was taken.
-4.1 States 4.2 Actions 4.3 Utility
+Once keywords are weighted, we make a selection of the most key nouns, verbs,and adjetives from which to cosntruct our headline. Headline generation is modeled as a search problem. Words are appended to the headline following a basic CFG model, and the end state that maximized an evaluation function was taken. A search problem effictively determines the maximum in an appropriate amount time, particularly because we limit the search space to a smaller set of words. 
+4.1 States
+  The State has three elements: the headline as currently generated, a concatenation of words that cannot be currently considered, and the current round, demonstrating what parts of speech should be considered to add to the headline.
+  The initial state is no headline, no used words, and round 0. 
+4.2 Actions
+  The structure of a headline is Adj Noun Verb Adj Noun
+  For the first round, all possible adjectives are considered, including the empty string, and all nouns are considered for the subject noun, excluding the empty string and preventing the same word from being chosen for both adj and subject noun.
+  For the second round, all possible verbs are considered, excluding the empty string.
+  For the final round, all non-used and non-duplicative adjectives and nouns considered, including the empty string for both.
+  Thus the maximum length headline is length 5, with all words included, while the minimum length of a headline is 2, with only the subject noun and verb included.
+4.3 Utility
+  In order to determine the best headline, a utility function was crafted. This utility function weights each part of the word by its keyword score and its place within in the headline. 
 5 Example
 6 Results
 7 Future Work
