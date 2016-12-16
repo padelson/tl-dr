@@ -7,7 +7,6 @@ import argparse
 import sys
 import os.path
 
-#TODO: caching of weight vector
 #TODO: create small dataset from rss.py?
 
 def setup_argparse():

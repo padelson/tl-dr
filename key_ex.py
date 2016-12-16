@@ -6,9 +6,9 @@ from process_data import *
 
 def learn_key_extractor(trainingData, testData, keywordFeatureExtractor, numIters, eta, wordCounts, wikiCounts):
     w = util.learnPredictor(trainingData, testData, keywordFeatureExtractor, numIters, eta, wordCounts, wikiCounts)
-    f = open('key_extractor_weights.txt', 'w')
-    f.write(str(json.dumps(w)))
-    f.close()
+    # f = open('key_extractor_weights.txt', 'w')
+    # f.write(str(json.dumps(w)))
+    # f.close()
     return w
 
 def extract_keys(text, wordCounts, wikiCounts):
