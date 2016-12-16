@@ -1,6 +1,7 @@
 #!/usr/bin/python
 import nltk
 import util
+import string
 
 def getScore(entry, featureExtractor, weights, wordCounts, wikiCounts):
 	return util.dotProduct(weights, featureExtractor(entry, wordCounts, wikiCounts))
@@ -15,18 +16,56 @@ def roundToFraction(num, denom, frac):
     sector = float(denom) / frac
     return int(num / sector)
 
-def removePuncation (word):
-    index1 = 0;
-    for i in range(len(word)):
-        if word[i].isalnum():
-            index1 = i
-            break
-    index2 = 0
-    for i in range(len(word)-1, 0-1, -1):
-        if word[i].isalnum():
-            index2 = i
-            break
-    return word[index1:index2+1]
+#########################################
+# preprocess(str) -> string w/o punct   #
+#########################################
+def replaceApostrophe(body):
+    body = body.replace("\xe2\x80\x98", "'") # \u2018
+    body = body.replace("\xe2\x80\x99", "'") # \u2019
+    return body
+
+def replaceQuotation(body):
+    body = body.replace("\xe2\x80\x9c",'"') # \u201c
+    body = body.replace("\xe2\x80\x9d",'"') # \u201d
+    return body
+
+def removeDash(body):
+    body = body.replace("\xe2\x80\x93","") # \u2013
+    body = body.replace("\xe2\x80\x94","") # \u2014
+    body = body.replace("\xe2\x80\x95","") # \u2015
+    body = body.replace("\xe2\x80\xa6","") # \u2026 ellipses
+    return body
+
+def replaceWhiteSpace(body):
+    body = body.replace("\xe2\x80\x89"," ") # \u2009
+    body = body.replace("\xc2\xa0"," ") # \u00a0
+    #body = body.replace("\\n", " ")
+    return body
+
+def convertToASCII(body):
+    ascii_chars = [c for c in body if c in string.printable]
+    return ''.join(ascii_chars)
+
+def preprocess(body):
+    body = replaceApostrophe(body)
+    body = replaceQuotation(body)
+    body = removeDash(body)
+    body = replaceWhiteSpace(body)
+    # maybe comment out?
+    body = convertToASCII(body)
+    return body
+##########################################
+
+
+def removePunctuation(word):
+    while not word[0].isalnum():
+
+        word = word[1:]
+        if len(word) == 0:
+            return ""
+    while not word[-1].isalnum():
+        word = word[:-1]
+    return word
 
 
 def keywordFeatureExtractor(x, wordCounts, wikiCounts):
@@ -38,13 +77,14 @@ def keywordFeatureExtractor(x, wordCounts, wikiCounts):
     # location, count
     count = 0
     wordCount = len(article.split())
-    for i, wordPunc in enumerate(article.split()):
-        word = removePuncation(wordPunc)
+    for i,word in enumerate(article.split()):
+        #print i, word
+        word = removePunctuation(word)
         if word == testWord:
             count += 1
             frac = roundToFraction(i, wordCount, 3)
             phi["location"+str(frac)] = 1
-                #phi["term freq " + str(count)] = 1
+            #phi["term freq " + str(count)] = 1
     phi["term freq > 5 < 20"] = 1 if count < 20 and count > 5 else 0
     phi["term freq/5 "+ str(count/5)] = 1
     phi["all letter "] = 1 if testWord.isalpha() else 0

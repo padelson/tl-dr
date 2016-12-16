@@ -8,9 +8,10 @@ import tldrlib
 def get_words_to_learn(body, stopWords):
     desired_tags = ['NOUN', 'ADJ', 'VERB']
     tagged = nltk.pos_tag(body, tagset='universal')
-    #TODO: instead of returning the word itself(t[0]), stem it
-    return set([ (tldrlib.removePuncation(t[0]), t[1]) for t in tagged if t[1] in desired_tags and t[0].lower() not in stopWords and tldrlib.removePuncation(t[0].lower()) not in stopWords and t[0] != '\u2014'])
-
+    return set([(tldrlib.removePunctuation(t[0]), t[1]) for t in tagged \
+        if t[1] in desired_tags and \
+        tldrlib.removePunctuation(t[0]).lower() not in stopWords and \
+        tldrlib.removePunctuation(t[0]) != ""])
 def get_data_entries(text):
     # (article, word, part of speech)
     words = get_words_to_learn(text.split(), getStopWords())
@@ -46,55 +47,60 @@ def getStopWords():
 #     pos: part of speech of word
 #     keyWord: -1 or 1 indicating whether the word is a keyword (1 if yes)
 def process_data(num_samples=-1):
-    f1 = open('rss_data.txt', 'r')
-    f2 = open('processed_data.txt', 'w')
-    f3 = open('articles.txt', 'w')
+    rssdata_f = open('rss_data.txt', 'r')
+    processed_f = open('processed_data.txt', 'w')
+    articles_f = open('articles.txt', 'w')
     stopWords = getStopWords()
     raw_count = 0
     entry_count = 0
     articles = {}
     while (True):
-        line = f1.readline()
+        line = rssdata_f.readline()
         if line == '' or (raw_count == num_samples and num_samples is not -1):
             break
 
         line_obj = json.loads(line)
-        title = line_obj['gold']
-        content = line_obj['content']
+        gold = tldrlib.preprocess(line_obj['gold'].encode('utf-8'))
+        content = tldrlib.preprocess(line_obj['content'].encode('utf-8'))
+
+        # gets list of all gold words that were found in the article
+        #   working off assumption that we can build headline from only
+        #   words in the article
         raw_count += 1
         print 'processing raw entry ' + str(raw_count)
 
-        title_words_to_learn = get_words_to_learn(title.split(), stopWords)
-        title_words_to_learn_final = [w for w in title_words_to_learn if w[0] in content.split()]
-        #every word in the title is assumed to be a keyword
-        for word_pos in title_words_to_learn_final:
-            word, pos = word_pos
-            entry = {'content': content, 'word': word,
-                     'title': title, 'keyWord': 1, 'pos': pos}
-            f2.write(str(json.dumps(entry)) + '\n')
+        # for the gold set, get the words in the article & non stopwords
+        gold = [word for word in gold.split() \
+            if word in "".join(content.split()[:150]) and \
+            word not in stopWords]
+
+        # for the first 150 words in an article, get the NOUN/VERB/ADJ
+        candidateKeywords = get_words_to_learn(content.split()[:150], stopWords)
+
+        for candidate in candidateKeywords:
+            word, pos = candidate
+            entry = {}
+            entry['content'] = content
+            entry['gold'] = gold
+            entry['word'] = word
+            entry['keyWord'] = 1 if word in gold else 0
+            entry['pos'] = str(pos)
+            processed_f.write(json.dumps(entry) + '\n')
             entry_count += 1
             if entry_count % 100 == 0:
                 print 'entry ' + str(entry_count) + ' added'
+        #
+        # gold_words_to_learn = get_words_to_learn(gold.split(), stopWords)
+        # gold_words_to_learn_final = [w for w in gold_words_to_learn if w[0] in content.split()]
 
-        #every word not in the title is assumed to not be a keyword
-        non_keywords = [w for w in content.split()[:150] if w.lower() not in title.lower().split()]
+        articles[' '.join(gold)] = content
 
-        for word_pos in get_words_to_learn(set(non_keywords), stopWords):
-            word, pos = word_pos
-            entry = {'content': content, 'word': word,
-                     'title': title, 'keyWord': 0, 'pos': pos}
-            f2.write(str(json.dumps(entry)) + '\n')
-            entry_count += 1
-            if entry_count % 100 == 0:
-                print 'entry ' + str(entry_count) + ' added'
+    articles_f.write(json.dumps(articles))
 
-        articles[title] = content
+    rssdata_f.close()
+    processed_f.close()
+    articles_f.close()
 
-    f3.write(str(json.dumps(articles)))
-
-    f1.close()
-    f2.close()
-    f3.close()
 
 def getArticlesDict():
     f = open('articles.txt', 'r')
@@ -119,6 +125,15 @@ def getWikiCounts():
         counts[line[0]] = int(line[1])
     return counts
 
+
+# given a string that represents JSON object, return tuple of parts
+# converts unicode to ascii
+# returns ()
+def parseJSON(s):
+    obj = json.loads(s)
+    return (obj['content'], obj['gold'],
+        obj['word'], obj['keyWord'], obj['pos'])
+
 # Reads processed_data.txt to obtain all examples and returns an array
 # of example points, where each point is of the form: (article, word, part of speech) , isKeyWord
 def get_data(num_samples=-1):
@@ -136,14 +151,15 @@ def get_data(num_samples=-1):
         count += 1
         if count % 100 == 0:
             print 'processing line ' + str(count)
-        line_obj = json.loads(line)
-        wordCounts[line_obj['word']] += 1
+        #line_obj = json.loads(line)
+        content, gold, word, keyWord, pos = parseJSON(line)
+        wordCounts[word] += 1
         # entry is of the form: (article, word, part of speech) , isKeyWord
-        entry = ((line_obj['content'], line_obj['word'], line_obj['pos']), line_obj['keyWord'])
+        entry = ((content, word, pos), keyWord)
         features = tldrlib.keywordFeatureExtractor(entry[0], wordCounts, wikiCounts)
-        entries[line_obj['title']].append(((features, line_obj['word'], line_obj['pos']), line_obj['keyWord']))
+        entries[' '.join(gold)].append(((features, word, pos), keyWord))
 
-        if line_obj['keyWord'] == 1:
+        if keyWord == 1:
             numKeyWordEntries += 1
             #print 'keyword'
             #print line_obj['word']
@@ -154,9 +170,8 @@ def get_data(num_samples=-1):
     f.close()
     print "number of data entries: " + str(count)
     print "number of positive entries: " + str(numKeyWordEntries)
-
-
     return entries, wordCounts, wikiCounts
+
 
 
 # Can indicate num_samples, to choose how many raw data points
