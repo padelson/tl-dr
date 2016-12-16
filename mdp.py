@@ -43,7 +43,7 @@ class headlineMDP(mdputil.MDP):
     def succAndProbReward(self, state, action):
         
         
-        def evalFunction(string):
+       def evalFunction(string):
             
             def find(string, n):
                 if n == 1:
@@ -65,8 +65,20 @@ class headlineMDP(mdputil.MDP):
             for i in range(0, len(headline)):
                 if headline[i] != "":
                     length +=1
-            return  (2*find(headline[0],1) + 4*find(headline[1],2) + find(headline[2],3) + find(headline[3],1) + 2*find(headline[4],2))/length
-        
+
+            value = 0
+            adj1 = find(headline[0],1)
+            subject = find(headline[1],2) 
+            verb = find(headline[2],3) 
+            adj2 = find(headline[3],1) 
+            obj = find(headline[4],2)
+            value = 4*adj1 + 4*subject + verb
+            if subject - obj > 1:
+                value += 2*obj
+            else: 
+                value += (obj-subject)
+            value +=4*adj2
+            return value/math.log(length)
 
         list = []
         
