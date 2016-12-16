@@ -12,7 +12,8 @@ def get_words_to_learn(body, stopWords):
     tagged = nltk.pos_tag(body, tagset='universal')
     return [(tldrlib.removePunctuation(t[0]), t[1]) for t in tagged \
         if t[1] in desired_tags and \
-        tldrlib.removePunctuation(t[0]).lower() not in stopWords]
+        tldrlib.removePunctuation(t[0]).lower() not in stopWords and \
+        tldrlib.removePunctuation(t[0]) != ""]
 
 
 def get_data_entries(text):
@@ -127,6 +128,14 @@ def getWikiCounts():
         counts[line[0]] = int(line[1])
     return counts
 
+# given a string that represents JSON object, return tuple of parts
+# converts unicode to ascii
+# returns ()
+def parseJSON(s):
+    obj = json.loads(s)
+    return (obj['content'], obj['gold'],
+        obj['word'], obj['keyWord'], obj['pos'])
+
 # Reads processed_data.txt to obtain all examples and returns an array
 # of example points, where each point is of the form: (article, word, part of speech) , isKeyWord
 def get_data(num_samples=-1):
@@ -144,14 +153,15 @@ def get_data(num_samples=-1):
         count += 1
         if count % 100 == 0:
             print 'processing line ' + str(count)
-        line_obj = json.loads(line)
-        wordCounts[line_obj['word']] += 1
+        #line_obj = json.loads(line)
+        content, gold, word, keyWord, pos = parseJSON(line)
+        wordCounts[word] += 1
         # entry is of the form: (article, word, part of speech) , isKeyWord
-        entry = ((line_obj['content'], line_obj['word'], line_obj['pos']), line_obj['keyWord'])
+        entry = ((content, word, pos), keyWord)
         features = tldrlib.keywordFeatureExtractor(entry[0], wordCounts, wikiCounts)
-        entries[line_obj['title']].append(((features, line_obj['word'], line_obj['pos']), line_obj['keyWord']))
+        entries[' '.join(gold)].append(((features, word, pos), keyWord))
 
-        if line_obj['keyWord'] == 1:
+        if keyWord == 1:
             numKeyWordEntries += 1
             #print 'keyword'
             #print line_obj['word']
@@ -162,8 +172,6 @@ def get_data(num_samples=-1):
     f.close()
     print "number of data entries: " + str(count)
     print "number of positive entries: " + str(numKeyWordEntries)
-
-
     return entries, wordCounts, wikiCounts
 
 

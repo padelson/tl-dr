@@ -44,8 +44,8 @@ def replaceWhiteSpace(body):
     return body
 
 def convertToASCII(body):
-	ascii_chars = [c for c in body if c in string.printable]
-	return ''.join(ascii_chars)
+    ascii_chars = [c for c in body if c in string.printable]
+    return ''.join(ascii_chars)
 
 def preprocess(body):
     body = replaceApostrophe(body)
@@ -73,6 +73,8 @@ def removePunctuation(word):
 def removePunctuation(word):
     while not word[0].isalnum():
         word = word[1:]
+	if len(word) == 0:
+		return ""
     while not word[-1].isalnum():
         word = word[:-1]
     return word
@@ -88,6 +90,7 @@ def keywordFeatureExtractor(x, wordCounts, wikiCounts):
     wordCount = len(article.split())
 
     for i,word in enumerate(article.split()):
+        #print i, word
         word = removePunctuation(word)
         if word == testWord:
             count += 1

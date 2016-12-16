@@ -86,12 +86,12 @@ newsurls = {
     'nyt-6thfloor': 'http://6thfloor.blogs.nytimes.com/feed/'
 }
 # shortened version for debugging
-
+"""
 newsurls = {
     #'nyt-world': 'http://rss.nytimes.com/services/xml/rss/nyt/World.xml',
     'nyt-war': 'http://atwar.blogs.nytimes.com/feed/'
 }
-
+"""
 
 ps = PorterStemmer()
 stop_f = open('english.stop', 'r')

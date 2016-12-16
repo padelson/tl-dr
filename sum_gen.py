@@ -21,7 +21,6 @@ def generate_summary(text, wordCounts, wikiCounts):
     verbs = sorted(keywords['VERB'])
     adjs = sorted(keywords['ADJ'])
     top_keywords = nouns[-10:] + verbs[-10:] + adjs[-10:]
-    mdp = SummaryMDP(top_keywords)
-    result = ''
-
-    return result
+    #mdp = SummaryMDP(top_keywords)
+    #result = ''
+    return top_keywords
