@@ -14,6 +14,7 @@ Run tldr.py
 *   -f:  filepath (available for key extraction and summary generation) to text file
 *   key extraction and summary generation work using a cached weight vector learned from 1549 articles for convenience.  You can simply create a file for the text you would like to extract keys from / summarize.
 *   ex: `python tldr.py -a sum -f final.txt`
+*   command line functionality was built for exploration of the different aspects, and not for robustness
 
 # TODOS (remove this before submitting):
 -   EVALUATE GENERATED SUMMARIES SOMEHOW.

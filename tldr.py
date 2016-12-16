@@ -48,7 +48,8 @@ parser = setup_argparse()
 args = parser.parse_args()
 
 # if not os.path.isfile('processed_data.txt') or args.n != -1:
-process_data.process_data(args.n)
+if not args.f:
+    process_data.process_data(args.n)
 
 if args.a == 'all':
     learn(args.n)
