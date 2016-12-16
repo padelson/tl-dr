@@ -13,10 +13,7 @@ def get_words_to_learn(body, stopWords):
     return [(tldrlib.removePunctuation(t[0]), t[1]) for t in tagged \
         if t[1] in desired_tags and \
         tldrlib.removePunctuation(t[0]).lower() not in stopWords]
-    #TODO: instead of returning the word itself(t[0]), stem it
-    #return [ (tldrlib.removePunctuation(t[0]), t[1]) \
-    #   for t in tagged \
-    #       if t[1] in desired_tags and t[0].lower() not in stopWords and tldrlib.removePunctuation(t[0].lower()) not in stopWords and t[0] != '\u2014']
+
 
 def get_data_entries(text):
     # (article, word, part of speech)
