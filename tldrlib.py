@@ -21,9 +21,9 @@ def roundToFraction(num, denom, frac):
 # preprocess(str) -> string w/o punct   #
 #########################################
 def replaceApostrophe(body):
-	body = body.replace("\xe2\x80\x98", "'") # \u2018
-	body = body.replace("\xe2\x80\x99", "'") # \u2019
-	return body
+    body = body.replace("\xe2\x80\x98", "'") # \u2018
+    body = body.replace("\xe2\x80\x99", "'") # \u2019
+    return body
 
 def replaceQuotation(body):
     body = body.replace("\xe2\x80\x9c",'"') # \u201c
@@ -34,15 +34,18 @@ def removeDash(body):
     body = body.replace("\xe2\x80\x93","") # \u2013
     body = body.replace("\xe2\x80\x94","") # \u2014
     body = body.replace("\xe2\x80\x95","") # \u2015
+    body = body.replace("\xe2\x80\xa6","") # \u2026 ellipses
     return body
 
 def replaceWhiteSpace(body):
     body = body.replace("\xe2\x80\x89"," ") # \u2009
+    body = body.replace("\xc2\xa0"," ") # \u00a0
     #body = body.replace("\\n", " ")
     return body
 
-def removeUnicode(body):
-    return re.sub(r'\\x[a-zA-Z0-9]{}', '', body)
+def convertToASCII(body):
+	ascii_chars = [c for c in body if c in string.printable]
+	return ''.join(ascii_chars)
 
 def preprocess(body):
     body = replaceApostrophe(body)
@@ -50,7 +53,7 @@ def preprocess(body):
     body = removeDash(body)
     body = replaceWhiteSpace(body)
     # maybe comment out?
-    body = removeUnicode(body)
+    body = convertToASCII(body)
     return body
 ##########################################
 """
@@ -68,9 +71,9 @@ def removePunctuation(word):
     return word[index1:index2+1]
 """
 def removePunctuation(word):
-    if not word[0].isalnum():
+    while not word[0].isalnum():
         word = word[1:]
-    if not word[-1].isalnum():
+    while not word[-1].isalnum():
         word = word[:-1]
     return word
 
