@@ -58,11 +58,24 @@ Once keywords are weighted, we make a selection of the most key nouns, verbs,and
   The structure of a headline is Adj Noun Verb Adj Noun
   For the first round, all possible adjectives are considered, including the empty string, and all nouns are considered for the subject noun, excluding the empty string and preventing the same word from being chosen for both adj and subject noun.
   For the second round, all possible verbs are considered, excluding the empty string.
-  For the final round, all non-used and non-duplicative adjectives and nouns considered, including the empty string for both.
+  For the final round, all non-used and non-duplicative adjectives and nouns considered, including the empty string for both, but any possiblity of a non empty adjective paired with an empty string noun is dismissed, since it would generate a nonsensicle headline. 
   Thus the maximum length headline is length 5, with all words included, while the minimum length of a headline is 2, with only the subject noun and verb included.
+  A sample sequence of actions may be ("" , "President"), ("advises"), ("", "talks")
 4.3 Utility
-  In order to determine the best headline, a utility function was crafted. This utility function weights each part of the word by its keyword score and its place within in the headline. 
+  In order to determine the best headline, we use a utility function. This utility function weights each part of the word by its keyweight and its place within in the headline. A subject is more highly weighted than an object, to ensure that the most important word is the subject of the headline. An object should only be included if sufficiently similarily weighted to the subject, demonstrating enough importance as to be included in the headline.
+   All keyweights are normalized by subtracting the average of the keyword scores of its parts of speech for the article.For example, a nouns final weight is equal to its initial weight minus the average of the weight across all nous. This was done to ensure that all words were sufficiently positive to be considered fairly and in similiar ranges across different articles so that the evaluation function would work well. The exact equation is:  
+            value = 4*adj1 + 4*subject + verb
+            if subject - obj > 1:
+                value += 2*obj
+            else: 
+                value += (obj-subject)
+            value = value/math.log(length) 
+Dividing by log(length) is done to ensure that only sufficiently meaningful words were added to the headline. 
 5 Example
+To this article ( http://www.nytimes.com/2016/11/28/science/space-junk-astroscale.html?_r=0 ) on the subject of a company creating glue-coated satetllites to collect space junk, our generator created the headline "satellites craft operate adhesive approach". The original title of "Space’s Trash Collector? A Japanese Entrepreneur Wants the Job" is highly difficult to replicate due to its stylized nature, but our headline undeniably conveys the key points of the article.
+
+Another example headline is "unsettling job crashes encyclopedias movie". This is to the New York Times article "Review: A ‘Short Stay,’ but Long Stuck in a Rut" which describes a a film that is unsettling and does dissapoint the reviewer. Encyclopedias are not as relevant, but the headline generator is limited by the keywords given to it. 
+
 6 Results
 7 Future Work
 There are two main aspects in which we could improve our project: improving results, and making it usable in daily life. In terms of improving results, we would investigate solu- tions such as k-means clustering and neural networks. K-means clustering might give us more insight into words and associations than logistic regression for keyword classification. Neural networks might allow us more depth in keyword extraction as well as generate gram-
