@@ -87,6 +87,9 @@ def keywordFeatureExtractor(x, wordCounts, wikiCounts):
         occursFirstSentence = article.split().count(testWord)
     phi["occurs in first sentence + count"] = occursFirstSentence
     phi["occurs in first sentence + count"] = occursFirstSentence
+
+    phi["bias"] = 1
+
     return phi
 
 

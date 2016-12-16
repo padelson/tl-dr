@@ -85,9 +85,19 @@ def evaluatePredictor(examples, predictor, wordCounts, wikiCounts):
     of misclassiied examples.
     '''
     error = 0
+    falsePositives = 0;
+    falseNegatives = 0;
     for x, y in examples:
-        if predictor(x, wordCounts, wikiCounts) != y:
+        prediction = predictor(x, wordCounts, wikiCounts)
+        if prediction != y:
             error += 1
+            if prediction == 1:
+                falsePositives += 1
+            elif prediction == 0:
+                falseNegatives += 1
+    print str(falsePositives) + ' false positives'
+    print str(falseNegatives) + ' false negatives'
+    print 'out of ' + str(len(examples)) + ' data points'
     return 1.0 * error / len(examples)
 
 def outputWeights(weights, path):

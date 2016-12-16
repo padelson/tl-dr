@@ -1,0 +1,68 @@
+Abstract
+Given an article or a body of text, we generate a headline or summary for it by extracting important words and formulating them into a sentence. We use logistic regression to give a confidence score on whether a given word is a keyword, and run all our ex- tracted keywords through a search al- gorithm to construct the optimal sen- tence.
+1 Introduction
+The task is to read a body of text as an input and generate a headline, which, for our purposes, is a simple sentence contain- ing the most relevant information. This has a number of different applications - summa- rizing articles without headlines, generating de-editorialized or de-clickbaited headlines, or acting to generate a good headline for an en- tirely computationally written article. The principle of summary generation can also gen- eralize to other bodies of text (chapters/para- graphs from books, forum threads) and our project might extend to these in the future.
+Generating a headline has two distinct pieces; first determining the various keywords of an article that are eligible to be included in the headline. Second, from the keywords, determining the most important words and order in which to generate the headline. The
+first problem will hereafter be called keyword extraction and the second will be called sum- mary generation.
+1.1 Data Set
+Our data set consists of 1500 New York Times articles gathered via RSS feeds. We chose New York Times because the source code for their articles contain additional descriptions and summaries that we’d like to emulate. We can expand our data set at any time so long as we find similarly useful descriptions and tags in them.
+We construct data points from these arti- cles, where a data point is defined as follows:
+((word, article, part of speech), word is keyword?)
+where ”word” is a candidate keyword, ”ar- ticle” is the article ”word” comes from, and ”part of speech” is the part of speech of ”word” as used in ”article.” ”word is key- word?” is a boolean value indicating whether the candidate ”word” is a keyword. We de- termine this value based on whether ”word” appears in the article’s title or the article’s ad- ditional descriptions. We can then use these data points to run supervised learning algo- rithms.
+For concision, we prune our data set in a few ways. We only consider words that are
+TL;DR
+PETER ADELSON SHO ARORA JEFF HARA
+Stanford University CS 221 Fall 2016
+December 15, 2016
+1
+used as nouns, verbs, and adjectives to get the most crucial pieces of information. We also only learn on the first 1500 words of an article. We call the words that satisfy these constraints our ”keyword candidates.”
+1.2 Input and Output
+• The input of our program is our data set, split up in a 9:1 training:test ratio.
+• The output is a series of generated head- lines for each article in the test data set.
+for finding the most relevant sentence was to find all sentences containing the highest fre- quency bigram, and then the best sentence was chosen based on its position in the doc- ument. This step was left ambiguous. The next step was to simplify the sentence, and it appears that they used a parts of speech tagger and rearranged them using a simple context-free grammar.
+2.3 Recurrent Neural Networks
+Some research has been done on this problem using RNNs (often LSTMs specifically) yield- ing reasonably impressive results. We have also been recommended by supervisors to ex- periment with the use of RNNs, and we in- tend to in future work on this project. Using RNNs would allow us to go from body of text to generated headline in one large step instead of the two smaller steps of keyword extraction and summary generation. We might also see faster performance, but the RNN would take longer to train (this one paper cites training time as 4.5 days).
+3 Keyword Extraction 3.1 Baseline
+As a baseline, we ran a linear classifier on three features: whether the word appeared in the first 400 words of the article, whether the word appeared capitalized in the article, and whether the word appeared more than 5 times and less than 20 times. This yielded an error rate of 68%.
+3.2 Oracle
+Our dataset had a headline along with the ar- ticle, so it made the most sense to return the headline as the predicted headline. In other words, the assumption we are making is that the best headline of an article is the actual headline of the article.
+1.3
+Evaluation Method
+Our generated summaries are by definition constrained to use proper English grammar, so the remaining aspect to evaluate is the sen- tence’s adequacy at summarizing the article. On a small scale, we can have human analysts rate each result, but when trying to test our algorithm on a larger data set, our only vi- able method is a bag-of-words approach. In this scenario, success is based on how simi- lar our generated headline is to our data set’s title and description.
+2 Related Work
+2.1 Logistic Regression
+Keyword extraction has been attempted us- ing logistic regression in the past. This MIT project utilized similar features to ours (term frequency, Wikipedia count, part of speech, capitalization, etc). They achieved 65% accu- racy on their data set, which was a human- classified set of articles and keywords.
+2.2 N-Grams
+Rajalakshmy et al. proposes a method with the assumption that the most relevant sen- tence in the article can be used to generate a headline. This approach begins by rank- ing sentences, taking the highest-scoring sen- tence, and then simplifying the sentence into a more ”headline-like” phrase. The process
+2
+3.3 Algorithm
+Our final implementation utilizes a logistic re- gression model with the following features:
+• word appears capitalized in the article
+• frequency with which word appears cap-
+italized
+• word occurs in first sentence
+• Wikipedia count
+• term frequency
+• location of appearances in the article
+• length of the word
+Now that we have a logistic regression model, we can use it to write a function to extract keywords:
+def extractKeywords( article ): keywords = {}
+#candidates as defined in 1.1 candidates = getCandidates( article ) for candidate in candidates :
+of speech. Using this information, we con- tinue onto the next part of the process: turn- ing these keywords into a headline.
+4 Summary Generation
+4.1 States 4.2 Actions 4.3 Utility
+5 Example
+6 Results
+7 Future Work
+There are two main aspects in which we could improve our project: improving results, and making it usable in daily life. In terms of improving results, we would investigate solu- tions such as k-means clustering and neural networks. K-means clustering might give us more insight into words and associations than logistic regression for keyword classification. Neural networks might allow us more depth in keyword extraction as well as generate gram-
+#regression score
+score = isKeyword(candidate , article )
+if (score > 0.5):
+pos = candidate.partOfSpeech keywords [ pos ] . append (( candidate ,
+return keywords
+The result is dictionary of lists of words and their regression scores sorted by their part
+matically correct sentences more quickly than a search model.
+With regards to regular use, our product
+3
+could be packaged into a Chrome Extension score ))
+(for example) that can generate summaries for a given web page or passage. This would give our project practical utility as well as allow us to run field tests on our project.

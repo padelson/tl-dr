@@ -1,0 +1,61 @@
+TL;DR
+
+Effective Headline Generation
+
+
+The Task
+
+Read an article and generate a meaningful headline
+
+Divided into two parts, finding the meaningful keywords and using them to create the headline
+
+
+Generate Headline
+
+Search
+
+A Set of Keywords:
+
+The top scoring keywords are selected for headline-consideration.
+
+Searching for a Headline:
+
+Generating headlines was modeled as a search problem. The state is a string and the action is adding keywords according to a context free grammar or quitting and evaluating the current state of the headline
+
+Evaluation of a state: 
+
+The generated headline maximizes utility, a function of headline length, scores of the keywords used, their associativity.
+
+Finding Keywords
+Logistic Regression
+The Data Set:
+
+Articles obtained from the New York Times RSS
+
+The Gold Standard:
+
+Non-stop words in the article title and rss-description were used as the keywords of the article.
+
+Preprocessing for candidates:
+
+Considered non-stop words in the first 150 words of the article. 
+
+Features: 
+
+Appears in first 50 words
+Appears in first 50 and last 100 words
+Word Frequency
+Capitalization
+and more!
+
+The Motivation
+We hate clickbait! Many articles have misleading or useless titles. With TL;DR, a more related, summarizing headline is generated.
+Analyzing keywords of an article allows for good classifcation, article search, without having to use human-labeled data.
+Natural Language Processing applications in keywords to headline search problem.
+
+
+Results:
+
+Achieving 10% error on keyword classification
+
+A sample headline: New York Public Housing

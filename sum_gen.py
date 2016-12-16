@@ -4,6 +4,8 @@ def generate_summary(text, wordCounts, wikiCounts):
     candidates = extract_keys(text, wordCounts, wikiCounts)
     result = ''
     for ck in candidates.keys():
-        # print sorted(candidates[ck])
+        keys = sorted(candidates[ck])
+        keys.reverse()
+        print keys[:5]
         result += ck + ' ' +  str(max(candidates[ck])) + '  '
     return result
