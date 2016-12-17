@@ -1,5 +1,35 @@
 from key_ex import *
-import mdp
+import mdp, nltk
+from tldrlib import removePunctuation
+from nltk.stem import WordNetLemmatizer as lemma
+
+# return capitalized string if string is first in headlineMDP
+# or if string appears capitalized in text more than not
+def capital(string, i, text):
+    if i == 0:
+        return string.capitalize()
+    count = 0
+    for word in text.split():
+        word = removePunctuation(word)
+        if string.lower() == word.lower():
+            count += 1 if word[0].isupper() else -1
+    return string.capitalize() if count > 0 else string.lower()
+
+# headline is of form "ADJ NOUN VERB ADJ NOUN"
+def polish(text, headline):
+    polished = ' '.join([capital(word,i,text) for i,word in enumerate(headline.split())])
+    return polished + '.'
+
+tokenizer = nltk.data.load('tokenizers/punkt/english.pickle')
+def getSentences(text):
+    global tokenizer
+    tokens = tokenizer.tokenize(text)
+    sentences = []
+    for sentence in tokens:
+        words = [removePunctuation(word) for word in sentence.split()]
+        sentences.append(' '.join(words))
+    return sentences
+
 def generate_summary(text, wordCounts, wikiCounts):
     candidates = extract_keys(text, wordCounts, wikiCounts)
     result = ''
@@ -28,14 +58,15 @@ def generate_summary(text, wordCounts, wikiCounts):
         			adjs.append( (ckSorted[i][1], ckSorted[i][0]- avg) )
         	adjs.append( ("", 0) )
         #result += ck + ' ' +  str(max(candidates[ck])) + '  '
-    
-    mdpH = mdp.headlineMDP(nouns = nouns, adjs = adjs, verbs = verbs)
+
+    content = getSentences(text)
+    mdpH = mdp.headlineMDP(nouns = nouns, adjs = adjs, verbs = verbs, content = content)
     vi = mdp.ValueIteration()
-    vi.solve(mdpdpH)
+    vi.solve(mdpH)
     curr = mdpH.startState()
     best = 0
     headline = ""
-  
+
     print "Finding best headine..."
     while True:
     	action = vi.pi[curr]
@@ -45,7 +76,7 @@ def generate_summary(text, wordCounts, wikiCounts):
     		best = nextProbRew[0][2]
     		break
     	curr = nextProbRew[0][0]
-    return headline
+    return polish(text, headline)
 
 def generate_summary2(text, wordCounts, wikiCounts):
     candidates = extract_keys(text, wordCounts, wikiCounts)

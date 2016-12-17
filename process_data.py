@@ -12,6 +12,7 @@ def get_words_to_learn(body, stopWords):
         if t[1] in desired_tags and \
         tldrlib.removePunctuation(t[0]).lower() not in stopWords and \
         tldrlib.removePunctuation(t[0]) != ""])
+
 def get_data_entries(text):
     # (article, word, part of speech)
     words = get_words_to_learn(text.split(), getStopWords())
@@ -71,11 +72,11 @@ def process_data(num_samples=-1):
 
         # for the gold set, get the words in the article & non stopwords
         gold = [word for word in gold.split() \
-            if word in "".join(content.split()[:150]) and \
+            if word in "".join(content.split()[:300]) and \
             word not in stopWords]
 
-        # for the first 150 words in an article, get the NOUN/VERB/ADJ
-        candidateKeywords = get_words_to_learn(content.split()[:150], stopWords)
+        # for the first 300 words in an article, get the NOUN/VERB/ADJ
+        candidateKeywords = get_words_to_learn(content.split()[:300], stopWords)
 
         for candidate in candidateKeywords:
             word, pos = candidate

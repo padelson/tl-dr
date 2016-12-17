@@ -31,14 +31,14 @@ def learn(n):
     	testData += data[k]
 
     w = key_ex.learn_key_extractor(trainingData, testData, tldrlib.keywordFeatureExtractor, 15, 0.0001, wordCounts, wikiCounts)
-    print w
+    # print w
 
     articles = process_data.getArticlesDict()
 
 
     for k in testDataKeys:
         text = articles[k]
-        print k
+        # print text
         print sum_gen.generate_summary(text, wordCounts, wikiCounts)
         print
 
