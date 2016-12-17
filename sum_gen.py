@@ -3,22 +3,21 @@ import mdp, nltk
 from tldrlib import removePunctuation
 from nltk.stem import WordNetLemmatizer as lemma
 
-# return capitalized string if string is first in headlineMDP
-# or if string appears capitalized in text more than not
-def capital(string, i, text):
-    if i == 0:
-        return string.capitalize()
-    count = 0
-    for word in text.split():
-        word = removePunctuation(word)
-        if string.lower() == word.lower():
-            count += 1 if word[0].isupper() else -1
-    return string.capitalize() if count > 0 else string.lower()
-
 # headline is of form "ADJ NOUN VERB ADJ NOUN"
 def polish(text, headline):
-    polished = ' '.join([capital(word,i,text) for i,word in enumerate(headline.split())])
-    return polished + '.'
+    polished = headline.split()[0].capitalize()
+    capital = {word:0 for word in headline.split()[1:]}
+    for word in text.split():
+        word = removePunctuation(word)
+        for string in headline.split()[1:]:
+            if string.lower == word.lower():
+                capital[string] += 1 if word[0].isupper() else -1
+    for string in headline.split()[1:]:
+        word = string.capitalize() if capital[string] > 0 else string.lower()
+        polished += " " + word
+
+    #polished = ' '.join([capital(word,i,text) for i,word in enumerate(headline.split())])
+    return "\"" + polished + "\""
 
 tokenizer = nltk.data.load('tokenizers/punkt/english.pickle')
 def getSentences(text):
